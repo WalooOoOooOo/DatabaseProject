@@ -1,160 +1,207 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <!-- Design by foolishdeveloper.com -->
-    <title>Login Page</title>
- 
+    <title>Login Page - Society CMS</title>
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;600&display=swap" rel="stylesheet">
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- Load custom fonts -->
+    <style>
+        @font-face {
+            font-family: 'c';
+            {% load static %}
+            src: url("{% static 'fonts/c.ttf' %}") format('truetype');
+            font-weight: normal;
+            font-style: normal;
+        }
+    </style>
+    
     <!--Stylesheet-->
     <style media="screen">
-      *,
-*:before,
-*:after{
-    padding: 0;
-    margin: 0;
-    box-sizing: border-box;
-}
-body{
-    background-color: #080710;
-}
-.background{
-    width: 430px;
-    height: 520px;
-    position: absolute;
-    transform: translate(-50%,-50%);
-    left: 50%;
-    top: 50%;
-}
-.background .shape{
-    height: 200px;
-    width: 200px;
-    position: absolute;
-    border-radius: 50%;
-}
-.shape:first-child{
-    background: linear-gradient(
-        #1845ad,
-        #23a2f6
-    );
-    left: -80px;
-    top: -80px;
-}
-.shape:last-child{
-    background: linear-gradient(
-        to right,
-        #ff512f,
-        #f09819
-    );
-    right: -30px;
-    bottom: -80px;
-}
-form{
-    height: 520px;
-    width: 400px;
-    background-color: rgba(255,255,255,0.13);
-    position: absolute;
-    transform: translate(-50%,-50%);
-    top: 50%;
-    left: 50%;
-    border-radius: 10px;
-    backdrop-filter: blur(10px);
-    border: 2px solid rgba(255,255,255,0.1);
-    box-shadow: 0 0 40px rgba(8,7,16,0.6);
-    padding: 50px 35px;
-}
-form *{
-    font-family: 'Poppins',sans-serif;
-    color: #ffffff;
-    letter-spacing: 0.5px;
-    outline: none;
-    border: none;
-}
-form h3{
-    font-size: 32px;
-    font-weight: 500;
-    line-height: 42px;
-    text-align: center;
-}
+        * {
+            padding: 0;
+            margin: 0;
+            box-sizing: border-box;
+        }
+        
+        body, html {
+            height: 100%;
+            margin: 0;
+            font-family: 'c', sans-serif; /* Apply c globally */
+        }
 
-label{
-    display: block;
-    margin-top: 30px;
-    font-size: 16px;
-    font-weight: 500;
-}
-input{
-    display: block;
-    height: 50px;
-    width: 100%;
-    background-color: rgba(255,255,255,0.07);
-    border-radius: 3px;
-    padding: 0 10px;
-    margin-top: 8px;
-    font-size: 14px;
-    font-weight: 300;
-}
-::placeholder{
-    color: #e5e5e5;
-}
-button{
-    margin-top: 50px;
-    width: 100%;
-    background-color: #ffffff;
-    color: #080710;
-    padding: 15px 0;
-    font-size: 18px;
-    font-weight: 600;
-    border-radius: 5px;
-    cursor: pointer;
-}
-.social{
-  margin-top: 30px;
-  display: flex;
-}
-.social div{
-  background: red;
-  width: 150px;
-  border-radius: 3px;
-  padding: 5px 10px 10px 5px;
-  background-color: rgba(255,255,255,0.27);
-  color: #eaf0fb;
-  text-align: center;
-}
-.social div:hover{
-  background-color: rgba(255,255,255,0.47);
-}
-.social .fb{
-  margin-left: 25px;
-}
-.social i{
-  margin-right: 4px;
-}
+        h1, h3, p, label, input, button, a {
+            font-family: 'c', sans-serif; /* Apply c to specific elements */
+        }
 
+        .container-fluid {
+            height: 100vh;
+        }
+
+        .row {
+            height: 100%;
+        }
+
+        .video-container {
+            position: relative;
+            padding: 0;
+            overflow: hidden;
+        }
+        
+        video {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            opacity: 0.9;
+        }
+
+        .form-container {
+            display: flex;
+            justify-content: center;
+            align-items: top;
+            padding : 100px 50px 0px 50px;
+            background-color: rgba(0, 0, 0, 1);
+        }
+
+        .form-box {
+            width: 400px;
+            background: rgba(50, 50, 50, 0.2);
+            border-radius: 20px;
+            backdrop-filter: blur(10px); /* Glassmorphism effect */
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 8px 32px rgba(31, 38, 135, 0.37); /* Soft shadow */
+            padding: 50px 35px;
+            text-align: left;
+        }
+
+        .society-info {
+            position: absolute;
+            top: 20%;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60%;
+            background: rgba(100, 100, 100, 0.3);
+            border-radius: 15px;
+            padding: 30px;
+            backdrop-filter: blur(5px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            color: #DAA520;
+            text-align: center;
+        }
+
+        h3 {
+            font-size: 32px;
+            font-weight: 500;
+            color: #FFA629;
+            margin-bottom: 20px;
+        }
+
+        .society-info h1 {
+            font-size: 40px;
+            color: #FFA629;
+            margin-bottom: 20px;
+        }
+
+        .society-info p {
+            font-size: 18px;
+            color: #FFFFFF;
+            line-height: 1.5;
+        }
+
+        label {
+            margin-top: 20px;
+            font-size: 16px;
+            font-weight: 500;
+            color: #DAA520;
+        }
+
+        input {
+            height: 50px;
+            width: 100%;
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            border: none;
+            padding: 0 10px;
+            margin-top: 8px;
+            font-size: 14px;
+            color: #FFFFFF;
+            transition: background-color 0.3s;
+        }
+
+        input:focus {
+            background-color: rgba(255, 255, 255, 0.2);
+            outline: none;
+        }
+
+        ::placeholder {
+            color: #e5e5e5;
+        }
+
+        button {
+            margin-top: 40px;
+            width: 100%;
+            background-color: #FFA629;
+            color: #080710;
+            padding: 15px 0;
+            font-size: 18px;
+            font-weight: 600;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: #C9A000;
+        }
+
+        a {
+            display: block;
+            margin-top: 20px;
+            color: #DAA520;
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
     </style>
 </head>
 <body>
-    <div class="background">
-        <div class="shape"></div>
-        <div class="shape"></div>
+    <div class="container-fluid">
+        <div class="row">
+            <!-- Login Form Section (Left) -->
+            <div class="col-md-4 form-container">
+                    <form method="post">
+                        <h3>Login Here</h3>
+                        {% csrf_token %}
+                        <label for="username">Username</label>
+                        <input type="text" placeholder="Enter Username" id="username" name="username">
+                        
+                        <label for="password">Password</label>
+                        <input type="password" placeholder="Password" id="password" name="pass">
+                        
+                        <button type="submit">Log In</button>
+                        <a href="{% url 'signer' %}">Create an account</a>
+                    </form>
+            </div>
+            
+            <!-- Video Section with Overlaying Info -->
+            <div class="col-md-8 video-container">
+                <img src="{% static 'images/a2.jpg' %}" alt="Background Image" style="width: 100%; height: 100%; object-fit: cover;">
+                <!-- Society Info as a glassmorphic card over video -->
+                <div class="society-info">
+                    <h1>Society Content Management System</h1>
+                    <p>Our Society CMS is designed to help you manage your university societies effortlessly. Whether you're a student looking to explore and apply for society positions or an admin managing the day-to-day operations, our CMS makes it simple and efficient.</p>
+                    <p>Get started today and make managing your society's events and members smoother than ever before!</p>
+                </div>
+            </div>
+        </div>
     </div>
-    <form method="post">
-        <h3>Login Here</h3>
-        {% csrf_token %} 
-        <label for="username">Username</label>
-        <input type="text" placeholder="Enter Username" id="username" name="username">
-
-        <label for="password">Password</label>
-        <input type="password" placeholder="Password" id="password" name="pass">
-
-        <button type="submit">Log In</button>
-        <!-- <input type="button" value=""> -->
-        <!-- <div class="social">
-          <div class="go"><i class="fab fa-google"></i>  Google</div>
-          <div class="fb"><i class="fab fa-facebook"></i>  Facebook</div>
-        </div> -->
-        <a href="{%url "signer"%}" >Create a account</a>
-    </form>
 </body>
 </html>
