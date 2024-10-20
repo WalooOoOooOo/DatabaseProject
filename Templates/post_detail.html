@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Post Details</title>
+</head>
+<body>
+    <h1>{{ post.title }}</h1>
+<p>{{ post.content }}</p>
+<p>By {{ post.author.username }} on {{ post.created_at }}</p>
+
+<h2>Comments</h2>
+{% for comment in comments %}
+    <p>{{ comment.content }}</p>
+    <p>By {{ comment.author.username }} on {{ comment.created_at }}</p>
+{% endfor %}
+
+<h3>Add a comment:</h3>
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Submit</button>
+</form>
+
+<a href="{%url 'forumhome' %}">Go Back</a>
+
+</body>
+</html>
