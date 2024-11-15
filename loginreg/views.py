@@ -26,16 +26,20 @@ def HomePage(request):
 
 
 def loginpage(request):
-    if request.method=='POST':
-        uname=request.POST['username']
-        pword=request.POST['pass']
-        user=authenticate(request,username=uname,password=pword)
+    if request.method == 'POST':
+        uname = request.POST['username']
+        pword = request.POST['pass']
+        user = authenticate(request, username=uname, password=pword)
         if user is not None:
-            login(request,user)
-            return redirect('home')
+            login(request, user)
+            if user.isadmin:  
+                return redirect('admin_panel')  
+            else:
+                return redirect('home') 
         else:
             return HttpResponse("Your Username or Password is incorrect.")
-    return render(request,'login.html')
+    return render(request, 'login.html')
+
 
 def logoutpage(request):
     logout(request)
