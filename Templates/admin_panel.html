@@ -6,26 +6,22 @@
     <title>Document</title>
 </head>
 <body>
+    <h1><a href="{% url 'home'%}">Home</a></h1>
+    <h1><a href="{% url 'forumhome'%}">Forum</a></h1>
     <h1>Welcome to the Admin Panel for {{ current_society.name }}</h1>
 
-<h2>Pending Membership Requests</h2>
-<ul>
-    {% for request in pending_requests %}
-    <li>
-        {{ request.user.username }}
-        <form method="post" action="{% url 'approve_membership' request.id %}">
-            {% csrf_token %}
-            <button type="submit">Approve</button>
-        </form>
-        <form method="post" action="{% url 'reject_membership' request.id %}">
-            {% csrf_token %}
-            <button type="submit">Reject</button>
-        </form>
-    </li>
-    {% empty %}
-    <li>No pending requests</li>
-    {% endfor %}
-</ul>
+    <h2>Pending Membership Requests</h2>
+    <ul>
+        {% for request in pending_requests %}
+            <li>
+                {{ request.user.username }}
+                <a href="{% url 'viewmember' request.id %}">View Application</a>
+            </li>
+        {% empty %}
+            <li>No pending requests</li>
+        {% endfor %}
+    </ul>
+    
 
 <h2>Announcements</h2>
 <ul>

@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h2>Membership Request Details</h2>
+<p><strong>Name:</strong> {{ membership_request.application.first_name }} {{ membership_request.application.last_name }}</p>
+<p><strong>GPA:</strong> {{ membership_request.application.gpa }}</p>
+<p><strong>Department:</strong> {{ membership_request.application.department }}</p>
+<p><strong>Reason:</strong> {{ membership_request.application.reason }}</p>
+<p><strong>Resume:</strong> 
+    {% if membership_request.application.resume %}
+        <a href="{{ membership_request.application.resume.url }}">Download</a>
+    {% else %}
+        Not submitted
+    {% endif %}
+</p>
+<form method="post" action="{% url 'amember' membership_request.id %}">
+    {% csrf_token %}
+    <button type="submit" class="btn btn-success">Approve</button>
+</form>
+<form method="post" action="{% url 'rmember' membership_request.id %}">
+    {% csrf_token %}
+    <button type="submit" class="btn btn-danger">Reject</button>
+</form>
+
+</body>
+</html>

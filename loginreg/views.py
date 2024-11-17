@@ -2,6 +2,7 @@ from django.shortcuts import render,HttpResponse,redirect
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate,login,logout
 from .models import CustomUser
+from Society.models import Society
 
 def SignUpPage(request):
     if request.method=='POST':
@@ -22,7 +23,16 @@ def SignUpPage(request):
 
 
 def HomePage(request):
-    return render(request,'home.html')
+    admin_panel_accessible = False
+    societies = None  
+    if request.user.is_authenticated:
+        societies = Society.objects.filter(admins=request.user)
+
+        admin_panel_accessible = societies.exists()
+    return render(request, 'home.html', {
+        'admin_panel_accessible': admin_panel_accessible,
+        'societies': societies,  
+    })
 
 
 def loginpage(request):
@@ -32,10 +42,10 @@ def loginpage(request):
         user = authenticate(request, username=uname, password=pword)
         if user is not None:
             login(request, user)
-            if user.isadmin:  
-                return redirect('admin_panel')  
+            if Society.objects.filter(admins=user).exists():
+                return redirect('apanel')
             else:
-                return redirect('home') 
+                return redirect('home')
         else:
             return HttpResponse("Your Username or Password is incorrect.")
     return render(request, 'login.html')

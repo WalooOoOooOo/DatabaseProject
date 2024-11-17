@@ -4,7 +4,6 @@ from loginreg.models import CustomUser
 class Society(models.Model):
     name = models.CharField(max_length=255, unique=True)
     description = models.TextField(blank=True)
-    slug = models.SlugField(unique=True)
     created_at = models.DateTimeField(auto_now_add=True)
     admins = models.ManyToManyField(CustomUser, related_name='society_admins')
     members = models.ManyToManyField(CustomUser, related_name='society_members', blank=True)
@@ -42,9 +41,37 @@ class Event(models.Model):
     def __str__(self):
         return f"Event: {self.title} for {self.society.name}"
 
+class MembershipApplication(models.Model):
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name="applications")
+    society = models.ForeignKey(Society, on_delete=models.CASCADE, related_name="applications")
+    first_name = models.CharField(max_length=50)
+    last_name = models.CharField(max_length=50)
+    gpa = models.DecimalField(max_digits=4, decimal_places=2)
+    department = models.CharField(max_length=100)
+    roll_number = models.CharField(max_length=20)
+    resume = models.FileField(upload_to="resumes/", blank=True, null=True)
+    reason = models.TextField()
+    status = models.CharField(
+        max_length=10,
+        choices=[('pending', 'Pending'), ('approved', 'Approved'), ('rejected', 'Rejected')],
+        default='pending'
+    )
+    submitted_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.first_name} {self.last_name}'s Application to {self.society.name}"
+
+
 class MembershipRequest(models.Model):
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name="membership_requests")
     society = models.ForeignKey(Society, on_delete=models.CASCADE, related_name="membership_requests")
+    application = models.OneToOneField(
+        'MembershipApplication', 
+        on_delete=models.CASCADE, 
+        null=True, 
+        blank=True,
+        related_name="membership_request"
+    )
     status = models.CharField(
         max_length=10,
         choices=[('pending', 'Pending'), ('approved', 'Approved'), ('rejected', 'Rejected')],
@@ -54,6 +81,7 @@ class MembershipRequest(models.Model):
 
     def __str__(self):
         return f"Request by {self.user.username} to join {self.society.name} - {self.status}"
+
 
     
 
