@@ -24,11 +24,14 @@ class Announcement(models.Model):
     society = models.ForeignKey(Society, on_delete=models.CASCADE, related_name="announcements")
     title = models.CharField(max_length=255)
     content = models.TextField()
+    image = models.ImageField(upload_to='announcements/', blank=True, null=True)  
+    is_member_specific = models.BooleanField(default=False) 
     created_at = models.DateTimeField(auto_now_add=True)
     created_by = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
 
     def __str__(self):
         return f"Announcement: {self.title} for {self.society.name}"
+
 
 class Event(models.Model):
     society = models.ForeignKey(Society, on_delete=models.CASCADE, related_name="events")
@@ -37,9 +40,21 @@ class Event(models.Model):
     date = models.DateField()
     created_at = models.DateTimeField(auto_now_add=True)
     created_by = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+    image = models.ImageField(upload_to='events/images/', blank=True, null=True)
+    video = models.FileField(upload_to='events/videos/', blank=True, null=True)  # New video field
+    is_participating_event = models.BooleanField(default=False)
+    max_participants = models.PositiveIntegerField(null=True, blank=True)
+    participants = models.ManyToManyField(CustomUser, related_name="participating_events", blank=True)
 
     def __str__(self):
         return f"Event: {self.title} for {self.society.name}"
+
+    def remaining_slots(self):
+        if self.is_participating_event:
+            return self.max_participants - self.participants.count()
+        return None
+
+
 
 class MembershipApplication(models.Model):
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name="applications")

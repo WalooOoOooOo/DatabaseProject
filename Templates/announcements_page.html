@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Announcements</title>
+</head>
+<body>
+    <h1>Announcements for {{ society.name }}</h1>
+
+{% if is_admin %}
+    <a href="{% url 'create_announcement' society_id=1 %}" class="btn btn-success">Create New Announcement</a>
+{% endif %}
+
+<ul>
+    {% for announcement in announcements %}
+        <li>
+            <h3>{{ announcement.title }}</h3>
+            <p>{{ announcement.content }}</p>
+            {% if announcement.image %}
+                <img src="{{ announcement.image.url }}" alt="{{ announcement.title }}">
+            {% endif %}
+            <small>Posted by {{ announcement.created_by.username }} on {{ announcement.created_at }}</small>
+        </li>
+    {% endfor %}
+</ul>
+<a href="{% url 'decshome' %}">Go Back</a>
+</body>
+</html>

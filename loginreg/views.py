@@ -24,15 +24,10 @@ def SignUpPage(request):
 
 def HomePage(request):
     admin_panel_accessible = False
-    societies = None  
-    if request.user.is_authenticated:
-        societies = Society.objects.filter(admins=request.user)
-
-        admin_panel_accessible = societies.exists()
-    return render(request, 'home.html', {
-        'admin_panel_accessible': admin_panel_accessible,
-        'societies': societies,  
-    })
+    if request.user.is_authenticated:  
+        admin_panel_accessible = Society.objects.filter(admins=request.user).exists()
+    
+    return render(request, 'home.html', {'admin_panel_accessible': admin_panel_accessible})
 
 
 def loginpage(request):

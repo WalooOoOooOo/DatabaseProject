@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Admin Panel</title>
 </head>
 <body>
     <h1><a href="{% url 'home'%}">Home</a></h1>
@@ -31,15 +31,26 @@
     <li>No announcements yet.</li>
     {% endfor %}
 </ul>
+<a href="{% url 'create_announcement' society_id=1 %}">Add a new announcement?</a>
 
 <h2>Events</h2>
 <ul>
-    {% for event in events %}
-    <li>{{ event.title }} ({{ event.date }})</li>
-    {% empty %}
-    <li>No events scheduled.</li>
+    {% for event_detail in event_participation %}
+        <li>
+            <a href="{% url 'event_detail' event_detail.event.id %}">
+                {{ event_detail.event.title }}
+            </a>
+            <br>
+            Participants: {{ event_detail.participants_count }}/
+            {% if event_detail.event.max_participants %}
+                {{ event_detail.event.max_participants }}
+            {% else %}
+                Unlimited
+            {% endif %}
+        </li>
     {% endfor %}
 </ul>
+
 
 </body>
 </html>

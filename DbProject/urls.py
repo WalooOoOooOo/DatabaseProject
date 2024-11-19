@@ -3,6 +3,8 @@ from django.urls import path
 from loginreg import views
 from forum import views as forumview
 from Society import views as sviews
+from django.conf import settings
+from django.conf.urls.static import static
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -22,6 +24,12 @@ urlpatterns = [
     path('viewmemberships/<int:request_id>/', sviews.view_membership_request, name='viewmember'),
     path('approve-membership/<int:request_id>/', sviews.approve_membership, name='amember'), 
     path('reject-membership/<int:request_id>/', sviews.reject_membership, name='rmember'),  
-    # path('announcements/<int:society_id>/', views.announcements_page, name='dannounce'),
-    # path('announcements/create/<int:society_id>/', views.create_announcement, name='createannouncement'),
+    path('announcements/<int:society_id>/', sviews.announcements_page, name='announcements_page'),
+    path('createannouncement/<int:society_id>/',sviews.create_announcement,name='create_announcement'),
+   path('society/<int:society_id>/events/', sviews.upcoming_events, name='upcoming_events'),
+    path('events/<int:event_id>/', sviews.event_detail, name='event_detail'), 
+    path('society/<int:society_id>/events/new/', sviews.create_event, name='create_event'), 
     ]
+
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
