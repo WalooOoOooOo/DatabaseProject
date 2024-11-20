@@ -17,6 +17,10 @@
         </form>
         
     </div>
+    <a href="{% if society.id == 1 %}{% url 'decshome' %}
+          {% elif society.id == 2 %}{% url 'acmhome' %}
+          {% elif society.id == 3 %}{% url 'pcomhome' %}
+          {% endif %}" class="btn btn-secondary">Go Back</a>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
 </body>

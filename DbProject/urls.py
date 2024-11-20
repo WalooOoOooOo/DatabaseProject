@@ -29,6 +29,8 @@ urlpatterns = [
    path('society/<int:society_id>/events/', sviews.upcoming_events, name='upcoming_events'),
     path('events/<int:event_id>/', sviews.event_detail, name='event_detail'), 
     path('society/<int:society_id>/events/new/', sviews.create_event, name='create_event'), 
+    path('ACM/', sviews.acm_page, name='acmhome'),
+    path('Procom/', sviews.pcom_page, name='pcomhome'),
     ]
 
 if settings.DEBUG:

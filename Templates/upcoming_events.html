@@ -33,6 +33,9 @@
             {% endfor %}
         </tbody>
     </table>
-    <a href="{% url 'decshome' %}" class="btn btn-secondary">Go Back</a>
+    <a href="{% if society.id == 1 %}{% url 'decshome' %}
+          {% elif society.id == 2 %}{% url 'acmhome' %}
+          {% elif society.id == 3 %}{% url 'pcomhome' %}
+          {% endif %}" class="btn btn-secondary">Go Back</a>
 </body>
 </html>

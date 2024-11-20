@@ -12,5 +12,10 @@
     {{ form.as_p }}
     <button type="submit" class="btn btn-primary">Post Announcement</button>
 </form>
+<a href="{% if society.id == 1 %}{% url 'decshome' %}
+          {% elif society.id == 2 %}{% url 'acmhome' %}
+          {% elif society.id == 3 %}{% url 'pcomhome' %}
+          {% endif %}" class="btn btn-secondary">Go Back</a>
+
 </body>
 </html>

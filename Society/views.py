@@ -7,6 +7,45 @@ from django.urls import reverse
 from loginreg.models import CustomUser
 from django.http import JsonResponse
 
+
+def pcom_page(request):
+    society = Society.objects.filter(name__iexact="Procom").first()
+
+    if not society:
+        return render(request, '404.html', status=404)  
+
+    is_member = society.members.filter(id=request.user.id).exists()
+    is_admin = society.admins.filter(id=request.user.id).exists()
+    show_announcements = is_member or is_admin
+
+    context = {
+    'society': society,
+    'is_member': is_member,
+    'is_admin': is_admin,
+    'show_announcements': show_announcements,
+    'apply_membership_url': reverse('aform', args=[society.id]),
+    }
+    return render(request,'pcom_page.html',context)
+
+def acm_page(request):
+    society = Society.objects.filter(name__iexact="AMCS").first()
+
+    if not society:
+        return render(request, '404.html', status=404)  
+
+    is_member = society.members.filter(id=request.user.id).exists()
+    is_admin = society.admins.filter(id=request.user.id).exists()
+    show_announcements = is_member or is_admin
+
+    context = {
+    'society': society,
+    'is_member': is_member,
+    'is_admin': is_admin,
+    'show_announcements': show_announcements,
+    'apply_membership_url': reverse('aform', args=[society.id]),
+    }
+    return render(request,'acm_page.html',context)
+
 @login_required
 @login_required
 def upcoming_events(request, society_id):
