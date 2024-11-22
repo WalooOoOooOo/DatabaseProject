@@ -37,7 +37,7 @@ urlpatterns = [
     path('event/delete/<int:event_id>/', sviews.delete_event, name='delete_event'),
     path('event/<int:event_id>/participation/', sviews.add_participation_detail, name='add_participation_detail'),
     path('event/<int:event_id>/participants/', sviews.view_event_participants, name='event_participants'),
-    path("profile/", sviews.profile_view, name="profile"),
+    path('profile/<str:username>/', sviews.profile_view, name='user_profile'),
     ]
 
 if settings.DEBUG:

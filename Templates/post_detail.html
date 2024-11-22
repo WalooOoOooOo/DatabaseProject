@@ -8,7 +8,7 @@
 <body>
     <h1>{{ post.title }}</h1>
     <p>{{ post.content }}</p>
-    <p>By {{ post.author.username }} on {{ post.created_at }}</p>
+    <p>By <a href="{% url 'user_profile' post.author.username %}">{{ post.author.username }}</a> on {{ post.created_at }}</p>
 
     {% if user_society_details %}
         <p>Author is part of the following societies:</p>
@@ -21,7 +21,9 @@
     {% for comment_info in comment_details %}
         <div class="comment">
             <p>{{ comment_info.comment.content }}</p>
-            <p>By {{ comment_info.comment.author.username }} on {{ comment_info.comment.created_at }}</p>
+            <p>By <a href="{% url 'user_profile' comment_info.comment.author.username %}">
+                {{ comment_info.comment.author.username }}
+            </a> on {{ comment_info.comment.created_at }}</p>
             
             {% if comment_info.society_details %}
                 {% for society_name, position in comment_info.society_details %}

@@ -10,16 +10,22 @@
     <p>Email: {{ user.email }}</p>
 
     <h2>Profile Picture</h2>
-<img src="{{ user.profile_picture.url }}" alt="Profile Picture" width="150">
-<form method="post" enctype="multipart/form-data">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Upload Picture</button>
-</form>
-
+    <img src="{{ user.profile_picture.url }}" alt="Profile Picture" width="150">
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Upload Picture</button>
+    </form>
 
     <h2>Societies</h2>
-    {% if societies %}
+    {% if admin_societies %}
+        <h3>Admin of:</h3>
+        <ul>
+            {% for society in admin_societies %}
+                <li>{{ society.name }}</li>
+            {% endfor %}
+        </ul>
+    {% elif societies %}
         <h3>Member of:</h3>
         <ul>
             {% for society in societies %}
@@ -28,15 +34,6 @@
         </ul>
     {% else %}
         <p>Not a member of any societies.</p>
-    {% endif %}
-
-    {% if admin_societies %}
-        <h3>Admin of:</h3>
-        <ul>
-            {% for society in admin_societies %}
-                <li>{{ society.name }}</li>
-            {% endfor %}
-        </ul>
     {% endif %}
 
     <h2>Event Participation</h2>
@@ -69,7 +66,7 @@
     <h2>Recent Posts</h2>
     {% if user_posts %}
         <ul>
-            {% for post in user_posts %}
+            {% for post in user_posts|slice:":3" %}
                 <li>{{ post.title }} - {{ post.created_at }}</li>
             {% endfor %}
         </ul>
@@ -80,14 +77,13 @@
     <h2>Recent Comments</h2>
     {% if user_comments %}
         <ul>
-            {% for comment in user_comments %}
+            {% for comment in user_comments|slice:":7" %}
                 <li>{{ comment.content }} - On Post: {{ comment.post.title }}</li>
             {% endfor %}
         </ul>
     {% else %}
         <p>No comments made yet.</p>
     {% endif %}
-
-
+    <a href="{% url 'home'%}">Go Back</a>
 </body>
 </html>

@@ -106,7 +106,7 @@
     <div class="card mb-3">
         <h2><a href="{% url 'forumpostdetail' item.post.id %}">{{ item.post.title }}</a></h2>
         <p>{{ item.post.content|truncatewords:20 }}</p>
-        <p>By {{ item.post.author.username }} on {{ item.post.created_at }}</p>
+        <p>By <a href="{% url 'user_profile' item.post.author.username %}">{{ item.post.author.username }}</a> on {{ item.post.created_at }}</p>
         {% for society in item.author_societies %}
             <p>Member of <strong>{{ society.society_name }}</strong> as <em>{{ society.position }}</em></p>
         {% endfor %}

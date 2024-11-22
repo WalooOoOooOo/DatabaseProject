@@ -11,18 +11,18 @@ from forum.models import Post, Comment
 from .forms import ProfilePictureForm
 
 @login_required
-def profile_view(request):
-    user = request.user
+def profile_view(request, username):
+    user = get_object_or_404(CustomUser, username=username)
     societies = user.society_members.all()
     admin_societies = user.society_admins.all()
     participation_details = ParticipationDetail.objects.filter(participant=user)
     membership_applications = MembershipApplication.objects.filter(user=user)
-    if request.method == "POST":
+    if request.method == "POST" and request.user == user:
         form = ProfilePictureForm(request.POST, request.FILES, instance=user)
         if form.is_valid():
             form.save()
     else:
-        form = ProfilePictureForm(instance=user)
+        form = ProfilePictureForm(instance=user) if request.user == user else None
     context = {
         "user": user,
         "societies": societies,
@@ -34,25 +34,7 @@ def profile_view(request):
     return render(request, "profile.html", context)
 
 
-@login_required
-def profile_view(request):
-    user = request.user  
-    societies = user.society_members.all()
-    admin_societies = user.society_admins.all()
-    participation_details = ParticipationDetail.objects.filter(participant=user)
-    membership_applications = MembershipApplication.objects.filter(user=user)
-    user_posts = Post.objects.filter(author=user)
-    user_comments = Comment.objects.filter(author=user)
-    context = {
-        "user": user,
-        "societies": societies,
-        "admin_societies": admin_societies,
-        "participation_details": participation_details,
-        "membership_applications": membership_applications,
-        "user_posts": user_posts,
-        "user_comments": user_comments,
-    }
-    return render(request, "profile.html", context)
+
 
 @login_required
 def view_event_participants(request, event_id):
