@@ -1,11 +1,150 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from .models import Society, MembershipRequest, Announcement, Event
+from .models import Society, MembershipRequest, Announcement, Event,ParticipationDetail,MembershipApplication
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.http import require_POST
-from .forms import MembershipApplicationForm,AnnouncementForm,EventForm
+from .forms import MembershipApplicationForm,AnnouncementForm,EventForm,ParticipationDetailForm
 from django.urls import reverse
 from loginreg.models import CustomUser
 from django.http import JsonResponse
+from django.http import HttpResponseRedirect
+from forum.models import Post, Comment
+from .forms import ProfilePictureForm
+
+@login_required
+def profile_view(request):
+    user = request.user
+    societies = user.society_members.all()
+    admin_societies = user.society_admins.all()
+    participation_details = ParticipationDetail.objects.filter(participant=user)
+    membership_applications = MembershipApplication.objects.filter(user=user)
+    if request.method == "POST":
+        form = ProfilePictureForm(request.POST, request.FILES, instance=user)
+        if form.is_valid():
+            form.save()
+    else:
+        form = ProfilePictureForm(instance=user)
+    context = {
+        "user": user,
+        "societies": societies,
+        "admin_societies": admin_societies,
+        "participation_details": participation_details,
+        "membership_applications": membership_applications,
+        "form": form,
+    }
+    return render(request, "profile.html", context)
+
+
+@login_required
+def profile_view(request):
+    user = request.user  
+    societies = user.society_members.all()
+    admin_societies = user.society_admins.all()
+    participation_details = ParticipationDetail.objects.filter(participant=user)
+    membership_applications = MembershipApplication.objects.filter(user=user)
+    user_posts = Post.objects.filter(author=user)
+    user_comments = Comment.objects.filter(author=user)
+    context = {
+        "user": user,
+        "societies": societies,
+        "admin_societies": admin_societies,
+        "participation_details": participation_details,
+        "membership_applications": membership_applications,
+        "user_posts": user_posts,
+        "user_comments": user_comments,
+    }
+    return render(request, "profile.html", context)
+
+@login_required
+def view_event_participants(request, event_id):
+    event = get_object_or_404(Event, id=event_id)
+    if not event.society.admins.filter(id=request.user.id).exists():
+        return redirect('admin_panel.html')  
+    participants = event.participants.all()  
+    context = {
+        'event': event,
+        'participants': participants,
+    }
+    return render(request, 'event_participants.html', context)
+
+@login_required
+def add_participation_detail(request, event_id):
+    event = get_object_or_404(Event, id=event_id)
+    user = request.user
+    if not event.is_participating_event or event.participants.filter(id=user.id).exists():
+        return redirect('event_detail', event_id=event.id)
+
+    if request.method == 'POST':
+        form = ParticipationDetailForm(request.POST)
+        if form.is_valid():
+            participation_detail = form.save(commit=False)
+            participation_detail.event = event
+            participation_detail.participant = user
+            participation_detail.save()
+
+            event.participants.add(user)
+            return redirect('event_detail', event_id=event.id)
+    else:
+        form = ParticipationDetailForm()
+
+    return render(request, 'add_participation_detail.html', {'form': form, 'event': event})
+
+
+@login_required
+@require_POST
+def delete_event(request, event_id):
+    event = get_object_or_404(Event, id=event_id)
+    if not event.society.admins.filter(id=request.user.id).exists():
+        return redirect('home')  
+    event.delete()
+    return redirect('upcoming_events', society_id=event.society.id)
+
+
+@login_required
+def edit_event(request, event_id):
+    event = get_object_or_404(Event, id=event_id)
+    if not event.society.admins.filter(id=request.user.id).exists():
+        return redirect('home')  
+    if request.method == 'POST':
+        form = EventForm(request.POST, request.FILES, instance=event)
+        if form.is_valid():
+            form.save()
+            return redirect('event_detail', event_id=event.id)
+    else:
+        form = EventForm(instance=event)
+
+    return render(request, 'edit_event.html', {'form': form, 'event': event})
+
+
+@login_required
+@require_POST
+def delete_announcement(request, announcement_id):
+    announcement = get_object_or_404(Announcement, id=announcement_id)
+    society = announcement.society
+
+    if not society.admins.filter(id=request.user.id).exists():
+        return redirect('announcements_page', society_id=society.id)
+
+    announcement.delete()
+    return redirect('announcements_page', society_id=society.id)
+
+
+@login_required
+def edit_announcement(request, announcement_id):
+    announcement = get_object_or_404(Announcement, id=announcement_id)
+    society = announcement.society
+
+    if not society.admins.filter(id=request.user.id).exists():
+        return redirect('announcements_page', society_id=society.id)
+
+    if request.method == 'POST':
+        form = AnnouncementForm(request.POST, request.FILES, instance=announcement)
+        if form.is_valid():
+            form.save()
+            return redirect('announcements_page', society_id=society.id)
+    else:
+        form = AnnouncementForm(instance=announcement)
+
+    return render(request, 'edit_announcement.html', {'form': form, 'announcement': announcement})
 
 
 def pcom_page(request):
@@ -65,15 +204,18 @@ def upcoming_events(request, society_id):
 def event_detail(request, event_id):
     event = get_object_or_404(Event, id=event_id)
     user = request.user
-
-   
     is_admin = event.society.admins.filter(id=user.id).exists()
 
     if request.method == 'POST' and event.is_participating_event and not is_admin:
         if event.remaining_slots() > 0:
-            event.participants.add(user)
+            if not ParticipationDetail.objects.filter(event=event, participant=user).exists():
+                return HttpResponseRedirect(reverse('add_participation_detail', args=[event.id]))
         else:
-            return render(request, 'event_detail.html', {'event': event, 'error': 'No slots available', 'is_admin': is_admin})
+            return render(request, 'event_detail.html', {
+                'event': event, 
+                'error': 'No slots available', 
+                'is_admin': is_admin
+            })
 
     context = {
         'event': event,
@@ -90,7 +232,7 @@ def create_event(request, society_id):
     society = get_object_or_404(Society, id=society_id)
 
     if not society.admins.filter(id=request.user.id).exists():
-        return redirect('decshome')
+        return redirect('home')
 
     if request.method == 'POST':
         form = EventForm(request.POST, request.FILES)  

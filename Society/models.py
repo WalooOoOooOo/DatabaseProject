@@ -1,6 +1,10 @@
 from django.db import models
 from loginreg.models import CustomUser
 
+
+
+
+
 class Society(models.Model):
     name = models.CharField(max_length=255, unique=True)
     description = models.TextField(blank=True)
@@ -38,10 +42,11 @@ class Event(models.Model):
     title = models.CharField(max_length=255)
     description = models.TextField()
     date = models.DateField()
+    venue = models.CharField(max_length=255)  
     created_at = models.DateTimeField(auto_now_add=True)
     created_by = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
     image = models.ImageField(upload_to='events/images/', blank=True, null=True)
-    video = models.FileField(upload_to='events/videos/', blank=True, null=True)  # New video field
+    video = models.FileField(upload_to='events/videos/', blank=True, null=True)  
     is_participating_event = models.BooleanField(default=False)
     max_participants = models.PositiveIntegerField(null=True, blank=True)
     participants = models.ManyToManyField(CustomUser, related_name="participating_events", blank=True)
@@ -53,6 +58,18 @@ class Event(models.Model):
         if self.is_participating_event:
             return self.max_participants - self.participants.count()
         return None
+
+
+class ParticipationDetail(models.Model):
+    event = models.ForeignKey(Event, on_delete=models.CASCADE, related_name='participation_details')
+    participant = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='participation_details')
+    name = models.CharField(max_length=255)
+    age = models.PositiveIntegerField()
+    position = models.TextField()
+    submitted_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.name} participating in {self.event.title}"
 
 
 

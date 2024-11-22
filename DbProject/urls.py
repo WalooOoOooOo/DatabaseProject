@@ -31,6 +31,13 @@ urlpatterns = [
     path('society/<int:society_id>/events/new/', sviews.create_event, name='create_event'), 
     path('ACM/', sviews.acm_page, name='acmhome'),
     path('Procom/', sviews.pcom_page, name='pcomhome'),
+    path('announcement/edit/<int:announcement_id>/', sviews.edit_announcement, name='edit_announcement'),
+    path('announcement/delete/<int:announcement_id>/', sviews.delete_announcement, name='delete_announcement'),
+    path('event/edit/<int:event_id>/', sviews.edit_event, name='edit_event'),
+    path('event/delete/<int:event_id>/', sviews.delete_event, name='delete_event'),
+    path('event/<int:event_id>/participation/', sviews.add_participation_detail, name='add_participation_detail'),
+    path('event/<int:event_id>/participants/', sviews.view_event_participants, name='event_participants'),
+    path("profile/", sviews.profile_view, name="profile"),
     ]
 
 if settings.DEBUG:

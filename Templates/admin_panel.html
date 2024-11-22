@@ -41,7 +41,11 @@
                 {{ event_detail.event.title }}
             </a>
             <br>
-            Participants: {{ event_detail.participants_count }}/
+            Participants: 
+            <a href="{% url 'event_participants' event_detail.event.id %}">
+                {{ event_detail.participants_count }}
+            </a>
+            /
             {% if event_detail.event.max_participants %}
                 {{ event_detail.event.max_participants }}
             {% else %}
@@ -50,7 +54,5 @@
         </li>
     {% endfor %}
 </ul>
-
-
 </body>
 </html>

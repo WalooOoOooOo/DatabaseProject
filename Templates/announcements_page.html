@@ -4,30 +4,60 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Announcements</title>
+    <style>
+        /* Optional: Style the error message */
+        .error-message {
+            color: red;
+            font-size: 14px;
+        }
+    </style>
+    <script>
+        // Function to check the image size before form submission
+        function validateImageSize(input) {
+            const file = input.files[0];
+            const maxSize = 5 * 1024 * 1024; // 5 MB
+            const errorMessage = document.getElementById('image-size-error');
+            
+            if (file && file.size > maxSize) {
+                errorMessage.textContent = "The image size should not exceed 5 MB.";
+                input.value = '';  // Clear the selected file
+            } else {
+                errorMessage.textContent = '';  // Clear error message if valid
+            }
+        }
+    </script>
 </head>
 <body>
     <h1>Announcements for {{ society.name }}</h1>
 
-{% if is_admin %}
-    <a href="{% url 'create_announcement' society_id=1 %}" class="btn btn-success">Create New Announcement</a>
-{% endif %}
+    {% if is_admin %}
+        <a href="{% url 'create_announcement' society_id=1 %}" class="btn btn-success">Create New Announcement</a>
+    {% endif %}
 
-<ul>
-    {% for announcement in announcements %}
-        <li>
-            <h3>{{ announcement.title }}</h3>
-            <p>{{ announcement.content }}</p>
-            {% if announcement.image %}
-                <img src="{{ announcement.image.url }}" alt="{{ announcement.title }}">
-            {% endif %}
-            <small>Posted by {{ announcement.created_by.username }} on {{ announcement.created_at }}</small>
-        </li>
-    {% endfor %}
-</ul>
-<a href="{% if society.id == 1 %}{% url 'decshome' %}
-          {% elif society.id == 2 %}{% url 'acmhome' %}
-          {% elif society.id == 3 %}{% url 'pcomhome' %}
-          {% endif %}" class="btn btn-secondary">Go Back</a>
+    <ul>
+        {% for announcement in announcements %}
+            <li>
+                <h3>{{ announcement.title }}</h3>
+                <p>{{ announcement.content }}</p>
+                {% if announcement.image %}
+                    <img src="{{ announcement.image.url }}" alt="{{ announcement.title }}" style="max-width: 300px; height: auto;">
+                {% endif %}
+                <small>Posted by {{ announcement.created_by.username }} on {{ announcement.created_at }}</small>
+
+                {% if is_admin %}
+                    <a href="{% url 'edit_announcement' announcement.id %}" class="btn btn-warning">Edit</a>
+                    <form action="{% url 'delete_announcement' announcement.id %}" method="post" style="display:inline;" onsubmit="return confirm('Are you sure you want to delete this announcement?');">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-danger">Delete</button>
+                    </form>
+                {% endif %}
+            </li>
+        {% endfor %}
+    </ul>
+
+    
+
+    <a href="{% if society.id == 1 %}{% url 'decshome' %}{% elif society.id == 2 %}{% url 'acmhome' %}{% elif society.id == 3 %}{% url 'pcomhome' %}{% endif %}" class="btn btn-secondary">Go Back</a>
 
 </body>
 </html>

@@ -7,23 +7,37 @@
 </head>
 <body>
     <h1>{{ post.title }}</h1>
-<p>{{ post.content }}</p>
-<p>By {{ post.author.username }} on {{ post.created_at }}</p>
+    <p>{{ post.content }}</p>
+    <p>By {{ post.author.username }} on {{ post.created_at }}</p>
 
-<h2>Comments</h2>
-{% for comment in comments %}
-    <p>{{ comment.content }}</p>
-    <p>By {{ comment.author.username }} on {{ comment.created_at }}</p>
-{% endfor %}
+    {% if user_society_details %}
+        <p>Author is part of the following societies:</p>
+        {% for society_name, position in user_society_details %}
+            <p>Member of <strong>{{ society_name }}</strong> as <em>{{ position }}</em></p>
+        {% endfor %}
+    {% endif %}
 
-<h3>Add a comment:</h3>
-<form method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Submit</button>
-</form>
+    <h2>Comments</h2>
+    {% for comment_info in comment_details %}
+        <div class="comment">
+            <p>{{ comment_info.comment.content }}</p>
+            <p>By {{ comment_info.comment.author.username }} on {{ comment_info.comment.created_at }}</p>
+            
+            {% if comment_info.society_details %}
+                {% for society_name, position in comment_info.society_details %}
+                    <p>Member of <strong>{{ society_name }}</strong> as <em>{{ position }}</em></p>
+                {% endfor %}
+            {% endif %}
+        </div>
+    {% endfor %}
 
-<a href="{%url 'forumhome' %}">Go Back</a>
+    <h3>Add a comment:</h3>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Submit</button>
+    </form>
 
+    <a href="{% url 'forumhome' %}">Go Back</a>
 </body>
 </html>

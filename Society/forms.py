@@ -1,7 +1,19 @@
 from django import forms
 from .models import MembershipApplication
-from .models import Announcement,Event
+from .models import Announcement,Event,ParticipationDetail
+from loginreg.models import CustomUser
 
+
+class ProfilePictureForm(forms.ModelForm):
+    class Meta:
+        model = CustomUser
+        fields = ['profile_picture']
+
+class ParticipationDetailForm(forms.ModelForm):
+    class Meta:
+        model = ParticipationDetail
+        fields = ['name', 'age', 'position']
+        
 class MembershipApplicationForm(forms.ModelForm):
     class Meta:
         model = MembershipApplication
@@ -19,7 +31,7 @@ class AnnouncementForm(forms.ModelForm):
 class EventForm(forms.ModelForm):
     class Meta:
         model = Event
-        fields = ['title', 'description', 'date', 'image', 'video', 'is_participating_event', 'max_participants']
+        fields = ['title', 'description', 'date', 'venue', 'image', 'video', 'is_participating_event', 'max_participants']
         widgets = {
             'date': forms.DateInput(attrs={'type': 'date'}),
         }

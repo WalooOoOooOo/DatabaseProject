@@ -13,7 +13,7 @@
         <p><strong>Description:</strong> {{ event.description }}</p>
     
         {% if event.image %}
-            <img src="{{ event.image.url }}" alt="Event Image" class="img-fluid">
+            <img src="{{ event.image.url }}" alt="Event Image" class="img-fluid" style="max-width: 300px; height: auto;">
         {% endif %}
     
         {% if event.video %}
@@ -22,27 +22,37 @@
                 Your browser does not support the video tag.
             </video>
         {% endif %}
-    
+        {% if event.is_participating_event %}
         <p><strong>Remaining Slots:</strong> {{ remaining_slots }}</p>
-    
+        {% endif %}
         {% if error %}
             <div class="alert alert-danger">{{ error }}</div>
         {% endif %}
     
-        {% if can_participate %}
-            <form method="post">
-                {% csrf_token %}
-                <button type="submit" class="btn btn-success">Participate</button>
-            </form>
-        {% elif is_admin %}
-            <div class="alert alert-warning">
-                <strong>Admins cannot participate in events.</strong>
-            </div>
-        {% else %}
-            <div class="alert alert-info">
-                <strong>You have already registered for this event.</strong>
-            </div>
-        {% endif %}
+        {% if event.is_participating_event %}
+    <p><strong>Remaining Slots:</strong> {{ remaining_slots }}</p>
+
+    {% if error %}
+        <div class="alert alert-danger">{{ error }}</div>
+    {% endif %}
+
+    {% if can_participate %}
+        <form method="post">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-success">Participate</button>
+        </form>
+    {% elif is_admin %}
+        <div class="alert alert-warning">
+            <strong>Admins cannot participate in events.</strong>
+        </div>
+    {% else %}
+        <div class="alert alert-info">
+            <strong>You have already registered for this event.</strong>
+        </div>
+    {% endif %}
+{% endif %}
+
+
     
         <a href="{% url 'upcoming_events' event.society.id %}" class="btn btn-secondary mt-3">Back to Events</a>
     </div>
