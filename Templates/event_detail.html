@@ -36,20 +36,29 @@
         <div class="alert alert-danger">{{ error }}</div>
     {% endif %}
 
-    {% if can_participate %}
-        <form method="post">
-            {% csrf_token %}
-            <button type="submit" class="btn btn-success">Participate</button>
-        </form>
-    {% elif is_admin %}
-        <div class="alert alert-warning">
-            <strong>Admins cannot participate in events.</strong>
-        </div>
-    {% else %}
-        <div class="alert alert-info">
-            <strong>You have already registered for this event.</strong>
-        </div>
-    {% endif %}
+    {% if user in event.banned_participants.all %}
+    <div class="alert alert-danger">
+        <strong>You have been removed from this event and cannot re-register.</strong>
+    </div>
+{% elif can_participate %}
+    <form method="post" action="{% url 'add_participation_detail' event.id %}">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-success">Participate</button>
+    </form>
+{% elif is_admin %}
+    <div class="alert alert-warning">
+        <strong>Admins cannot participate in events.</strong>
+    </div>
+{% else %}
+    <div class="alert alert-info">
+        <strong>You have already registered for this event.</strong>
+    </div>
+{% endif %}
+
+{% endif %}
+
+{% if user_message %}
+    <div class="alert alert-warning">{{ user_message }}</div>
 {% endif %}
 
 

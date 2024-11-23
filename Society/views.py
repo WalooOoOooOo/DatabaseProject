@@ -9,6 +9,24 @@ from django.http import JsonResponse
 from django.http import HttpResponseRedirect
 from forum.models import Post, Comment
 from .forms import ProfilePictureForm
+from django.contrib import messages
+from django.contrib.messages import get_messages
+
+@login_required
+@require_POST
+def delete_participant(request, event_id, participant_id):
+    event = get_object_or_404(Event, id=event_id)
+    participant = get_object_or_404(CustomUser, id=participant_id)
+
+    if not event.society.admins.filter(id=request.user.id).exists():
+        return redirect('home')
+
+    event.participants.remove(participant)
+    event.banned_participants.add(participant)
+
+    messages.info(request, f"The participant '{participant.username}' has been removed and banned from the event '{event.title}'.")
+
+    return redirect('event_participants', event_id=event_id)
 
 @login_required
 def profile_view(request, username):
@@ -52,7 +70,20 @@ def view_event_participants(request, event_id):
 def add_participation_detail(request, event_id):
     event = get_object_or_404(Event, id=event_id)
     user = request.user
-    if not event.is_participating_event or event.participants.filter(id=user.id).exists():
+
+    if user in event.banned_participants.all():
+        return render(request, 'event_detail.html', {
+            'event': event,
+            'error': "You have been removed from this event and cannot re-register."
+        })
+
+    if event.participants.filter(id=user.id).exists():
+        return render(request, 'event_detail.html', {
+            'event': event,
+            'error': "You are already registered for this event."
+        })
+
+    if not event.is_participating_event:
         return redirect('event_detail', event_id=event.id)
 
     if request.method == 'POST':
@@ -69,6 +100,7 @@ def add_participation_detail(request, event_id):
         form = ParticipationDetailForm()
 
     return render(request, 'add_participation_detail.html', {'form': form, 'event': event})
+
 
 
 @login_required
@@ -129,43 +161,53 @@ def edit_announcement(request, announcement_id):
     return render(request, 'edit_announcement.html', {'form': form, 'announcement': announcement})
 
 
+@login_required
 def pcom_page(request):
     society = Society.objects.filter(name__iexact="Procom").first()
-
     if not society:
         return render(request, '404.html', status=404)  
-
+    is_in_any_society = Society.objects.filter(
+        members=request.user
+    ).exists() or Society.objects.filter(
+        admins=request.user
+    ).exists()
     is_member = society.members.filter(id=request.user.id).exists()
     is_admin = society.admins.filter(id=request.user.id).exists()
-    show_announcements = is_member or is_admin
-
     context = {
-    'society': society,
-    'is_member': is_member,
-    'is_admin': is_admin,
-    'show_announcements': show_announcements,
-    'apply_membership_url': reverse('aform', args=[society.id]),
+        'society': society,
+        'is_member': is_member,
+        'is_admin': is_admin,
+        'show_announcements': is_member or is_admin,
+        'show_apply_button': not is_in_any_society and not is_member and not is_admin,
+        'apply_membership_url': reverse('aform', args=[society.id]),
     }
-    return render(request,'pcom_page.html',context)
+    return render(request, 'pcom_page.html', context)
 
+@login_required
 def acm_page(request):
     society = Society.objects.filter(name__iexact="AMCS").first()
 
     if not society:
         return render(request, '404.html', status=404)  
 
+    is_in_any_society = Society.objects.filter(
+        members=request.user
+    ).exists() or Society.objects.filter(
+        admins=request.user
+    ).exists()
+
     is_member = society.members.filter(id=request.user.id).exists()
     is_admin = society.admins.filter(id=request.user.id).exists()
-    show_announcements = is_member or is_admin
 
     context = {
-    'society': society,
-    'is_member': is_member,
-    'is_admin': is_admin,
-    'show_announcements': show_announcements,
-    'apply_membership_url': reverse('aform', args=[society.id]),
+        'society': society,
+        'is_member': is_member,
+        'is_admin': is_admin,
+        'show_announcements': is_member or is_admin,
+        'show_apply_button': not is_in_any_society and not is_member and not is_admin,
+        'apply_membership_url': reverse('aform', args=[society.id]),
     }
-    return render(request,'acm_page.html',context)
+    return render(request, 'acm_page.html', context)
 
 @login_required
 @login_required
@@ -188,22 +230,19 @@ def event_detail(request, event_id):
     user = request.user
     is_admin = event.society.admins.filter(id=user.id).exists()
 
-    if request.method == 'POST' and event.is_participating_event and not is_admin:
-        if event.remaining_slots() > 0:
-            if not ParticipationDetail.objects.filter(event=event, participant=user).exists():
-                return HttpResponseRedirect(reverse('add_participation_detail', args=[event.id]))
-        else:
-            return render(request, 'event_detail.html', {
-                'event': event, 
-                'error': 'No slots available', 
-                'is_admin': is_admin
-            })
+    storage = get_messages(request)
+    user_message = None
+    for message in storage:
+        if "Your participation in the event" in str(message):
+            user_message = str(message)
+            break
 
     context = {
         'event': event,
         'can_participate': event.is_participating_event and user not in event.participants.all() and not is_admin,
         'remaining_slots': event.remaining_slots(),
         'is_admin': is_admin,
+        'user_message': user_message,
     }
     return render(request, 'event_detail.html', context)
 
@@ -287,16 +326,22 @@ def decs_page(request):
     if not society:
         return render(request, '404.html', status=404)  
 
+    is_in_any_society = Society.objects.filter(
+        members=request.user
+    ).exists() or Society.objects.filter(
+        admins=request.user
+    ).exists()
+
     is_member = society.members.filter(id=request.user.id).exists()
     is_admin = society.admins.filter(id=request.user.id).exists()
-    show_announcements = is_member or is_admin
 
     context = {
-    'society': society,
-    'is_member': is_member,
-    'is_admin': is_admin,
-    'show_announcements': show_announcements,
-    'apply_membership_url': reverse('aform', args=[society.id]),
+        'society': society,
+        'is_member': is_member,
+        'is_admin': is_admin,
+        'show_announcements': is_member or is_admin,
+        'show_apply_button': not is_in_any_society and not is_member and not is_admin,
+        'apply_membership_url': reverse('aform', args=[society.id]),
     }
     return render(request, 'decpage.html', context)
 

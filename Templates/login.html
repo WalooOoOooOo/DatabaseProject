@@ -10,6 +10,9 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
 
+    <!-- reCAPTCHA API -->
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+
     <!-- Stylesheet -->
     <style media="screen">
         * {
@@ -179,8 +182,12 @@
                     <label for="password">Password</label>
                     <input type="password" placeholder="Password" id="password" name="pass">
                     
+                    <!-- reCAPTCHA Widget -->
+                    <div class="g-recaptcha" data-sitekey="6Leq1YcqAAAAAGwbckKPT2wJJSlTkWALVrVzde0Q"></div>
+                    
                     <button type="submit">Log In</button>
                     <a href="{% url 'signer' %}">Create an account</a>
+                    <a href="{% url 'forgot_password' %}">Forgot your password?</a>
                 </form>
             </div>
             

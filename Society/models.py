@@ -50,7 +50,8 @@ class Event(models.Model):
     is_participating_event = models.BooleanField(default=False)
     max_participants = models.PositiveIntegerField(null=True, blank=True)
     participants = models.ManyToManyField(CustomUser, related_name="participating_events", blank=True)
-
+    banned_participants = models.ManyToManyField(CustomUser, related_name='banned_events', blank=True)
+    
     def __str__(self):
         return f"Event: {self.title} for {self.society.name}"
 

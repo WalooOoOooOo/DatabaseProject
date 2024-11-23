@@ -136,3 +136,14 @@ STATICFILES_DIRS = [
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 AUTH_USER_MODEL = 'loginreg.CustomUser'
 
+RECAPTCHA_PUBLIC_KEY = '6Leq1YcqAAAAAGwbckKPT2wJJSlTkWALVrVzde0Q' 
+RECAPTCHA_PRIVATE_KEY = '6Leq1YcqAAAAAAHGdj-uNE7yX-GS7PkMODC-t1YH'  
+
+RECAPTCHA_TEST_MODE = True
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'  
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = 'enthusiastictaha@gmail.com'  
+EMAIL_HOST_PASSWORD = 'ulxp ehft eccb ubuv' 
