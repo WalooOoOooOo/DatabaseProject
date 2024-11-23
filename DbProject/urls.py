@@ -41,6 +41,7 @@ urlpatterns = [
     path('forgot_password/', views.forgot_password, name='forgot_password'),
     path('reset_password/<uidb64>/<token>/', views.reset_password, name='reset_password'),
     path('event/<int:event_id>/remove-participant/<int:participant_id>/', sviews.delete_participant, name='delete_participant'),
+    path('remove_member/<int:society_id>/<int:user_id>/', sviews.remove_member, name='remove_member'),
     ]
 
 if settings.DEBUG:

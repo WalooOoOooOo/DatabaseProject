@@ -13,6 +13,15 @@ from django.contrib import messages
 from django.contrib.messages import get_messages
 
 @login_required
+def remove_member(request, society_id, user_id):
+    society = get_object_or_404(Society, id=society_id)
+    user_to_remove = get_object_or_404(CustomUser, id=user_id)
+    if request.user not in society.admins.all():
+        return HttpResponseRedirect(reverse('apanel'))
+    society.members.remove(user_to_remove)
+    return HttpResponseRedirect(reverse('apanel'))
+
+@login_required
 @require_POST
 def delete_participant(request, event_id, participant_id):
     event = get_object_or_404(Event, id=event_id)
@@ -352,17 +361,14 @@ def decs_page(request):
 @login_required
 def admin_panel(request):
     user_societies = Society.objects.filter(admins=request.user)
-    current_society = user_societies.first()  
-
+    current_society = user_societies.first()
     if not current_society:
         return render(request, 'home')
-
     pending_requests = MembershipRequest.objects.filter(society=current_society, status='pending')
     announcements = current_society.announcements.all()
     events = current_society.events.all()
     members = current_society.members.all()
     admins = current_society.admins.all()
-
     event_participation = [
         {
             'event': event,
@@ -371,16 +377,16 @@ def admin_panel(request):
         }
         for event in events
     ]
-
     context = {
         'current_society': current_society,
         'pending_requests': pending_requests,
         'announcements': announcements,
         'event_participation': event_participation,
-        'members': members,
+        'members': members,  
         'admins': admins,
     }
     return render(request, 'admin_panel.html', context)
+
 
 
 @login_required
