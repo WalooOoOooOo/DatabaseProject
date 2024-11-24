@@ -4,18 +4,67 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Membership Application</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background: url('/static/images/su2.jpg') no-repeat center center fixed;
+            background-size: cover;
+            font-family: Arial, sans-serif;
+        }
+        .form-container {
+            background: rgba(0, 0, 0, 0.7);
+            padding: 20px;
+            border-radius: 8px;
+            max-width: 400px;
+            margin: 100px auto;
+            color: white;
+        }
+        .form-container h2 {
+            text-align: center;
+            margin-bottom: 20px;
+            color: orange;
+        }
+        .btn {
+            display: block;
+            width: 100%;
+            margin-top: 10px;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+        .btn-success {
+            background-color: orange;
+            color: black;
+        }
+        .btn-success:hover {
+            background-color: darkorange;
+        }
+        .btn-secondary {
+            background-color: gray;
+            color: white;
+        }
+        .btn-secondary:hover {
+            background-color: darkgray;
+        }
+        a {
+            text-decoration: none;
+        }
+    </style>
 </head>
 <body>
-    <h2>Apply for Membership: {{ society.name }}</h2>
-<form method="post" enctype="multipart/form-data">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit" class="btn btn-success">Submit Application</button>
-</form>
-<a href="{% if society.id == 1 %}{% url 'decshome' %}
-          {% elif society.id == 2 %}{% url 'acmhome' %}
-          {% elif society.id == 3 %}{% url 'pcomhome' %}
-          {% endif %}" class="btn btn-secondary">Go Back</a>
-
+    <div class="form-container">
+        <h2>Apply for Membership: {{ society.name }}</h2>
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit" class="btn btn-success">Submit Application</button>
+        </form>
+        <a href="{% if society.id == 1 %}{% url 'decshome' %}
+                  {% elif society.id == 2 %}{% url 'acmhome' %}
+                  {% elif society.id == 3 %}{% url 'pcomhome' %}
+                  {% endif %}" class="btn btn-secondary">Go Back</a>
+    </div>
 </body>
 </html>

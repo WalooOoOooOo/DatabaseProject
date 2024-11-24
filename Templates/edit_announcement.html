@@ -4,14 +4,65 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Edit Announcement</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #121212;
+            color: #fff;
+        }
+        .container {
+            background-color: #1f1f1f;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            max-width: 600px;
+            margin-top: 50px;
+        }
+        h1 {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .form-group label {
+            font-weight: bold;
+        }
+        .form-control {
+            background-color: #333;
+            border: 1px solid #555;
+            color: #fff;
+        }
+        .form-control:focus {
+            background-color: #444;
+            border-color: #ff6600;
+            color: #fff;
+        }
+        .btn-primary {
+            background-color: #ff6600;
+            border-color: #ff6600;
+        }
+        .btn-primary:hover {
+            background-color: #e65c00;
+            border-color: #e65c00;
+        }
+        .btn-secondary {
+            background-color: #555;
+            color: #fff;
+        }
+        .btn-secondary:hover {
+            background-color: #666;
+        }
+    </style>
 </head>
 <body>
-    <h1>Edit Announcement: {{ announcement.title }}</h1>
-    <form method="post" enctype="multipart/form-data">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit" class="btn btn-primary">Save Changes</button>
-    </form>
-    <a href="{% url 'announcements_page' society_id=announcement.society.id %}" class="btn btn-secondary">Cancel</a>
+    <div class="container">
+        <h1>Edit Announcement: {{ announcement.title }}</h1>
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="form-group">
+                {{ form.as_p }}
+            </div>
+            <button type="submit" class="btn btn-primary btn-block">Save Changes</button>
+        </form>
+        <a href="{% url 'announcements_page' society_id=announcement.society.id %}" class="btn btn-secondary btn-block mt-3">Cancel</a>
+    </div>
 </body>
 </html>

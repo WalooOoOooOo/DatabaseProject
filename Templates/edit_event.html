@@ -3,90 +3,141 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Edit Event</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #121212;
+            color: #fff;
+        }
+        .container {
+            background-color: #1f1f1f;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            max-width: 800px;
+            margin-top: 50px;
+        }
+        h1 {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .form-group label {
+            font-weight: bold;
+        }
+        .form-control {
+            background-color: #333;
+            border: 1px solid #555;
+            color: #fff;
+        }
+        .form-control:focus {
+            background-color: #444;
+            border-color: #ff6600;
+            color: #fff;
+        }
+        .btn-primary {
+            background-color: #ff6600;
+            border-color: #ff6600;
+        }
+        .btn-primary:hover {
+            background-color: #e65c00;
+            border-color: #e65c00;
+        }
+        .btn-secondary {
+            background-color: #555;
+            color: #fff;
+        }
+        .btn-secondary:hover {
+            background-color: #666;
+        }
+        .alert-danger {
+            background-color: #ff3333;
+            border-color: #ff1a1a;
+        }
+        .form-group img, .form-group video {
+            max-width: 150px;
+        }
+    </style>
 </head>
 <body>
     <div class="container">
         <h1>Edit Event: {{ event.title }}</h1>
-    
         
         {% if form.errors %}
-          <div class="alert alert-danger">
+        <div class="alert alert-danger">
             <ul>
-              {% for field in form %}
-                {% for error in field.errors %}
-                  <li>{{ error }}</li>
+                {% for field in form %}
+                    {% for error in field.errors %}
+                        <li>{{ error }}</li>
+                    {% endfor %}
                 {% endfor %}
-              {% endfor %}
             </ul>
-          </div>
+        </div>
         {% endif %}
-    
-      
+
         <form method="POST" enctype="multipart/form-data">
-          {% csrf_token %}
-          
+            {% csrf_token %}
         
-          <div class="form-group">
-            <label for="id_title">Event Title:</label>
-            {{ form.title }}
-          </div>
-    
-          <div class="form-group">
-            <label for="id_description">Description:</label>
-            {{ form.description }}
-          </div>
-    
-          <div class="form-group">
-            <label for="id_date">Event Date:</label>
-            {{ form.date }}
-          </div>
-    
-          <div class="form-group">
-            <label for="id_venue">Venue:</label>
-            {{ form.venue }}
-          </div>
-    
-          <div class="form-group">
-            <label for="id_image">Event Image:</label>
-            {{ form.image }}
-            {% if event.image %}
-              <div>
-                <strong>Current Image:</strong>
-                <img src="{{ event.image.url }}" alt="Event Image" width="150">
-              </div>
-            {% endif %}
-          </div>
-    
-          <div class="form-group">
-            <label for="id_video">Event Video:</label>
-            {{ form.video }}
-            {% if event.video %}
-              <div>
-                <strong>Current Video:</strong>
-                <video width="150" controls>
-                  <source src="{{ event.video.url }}" type="video/mp4">
-                  Your browser does not support the video tag.
-                </video>
-              </div>
-            {% endif %}
-          </div>
-    
-          <div class="form-group">
-            <label for="id_is_participating_event">Is this a Participating Event?</label>
-            {{ form.is_participating_event }}
-          </div>
-    
-          <div class="form-group">
-            <label for="id_max_participants">Max Participants:</label>
-            {{ form.max_participants }}
-          </div>
-    
-          <div class="form-group">
-            <button type="submit" class="btn btn-primary">Save Changes</button>
-            <a href="{% url 'event_detail' event.id %}" class="btn btn-secondary">Cancel</a>
-          </div>
+            <div class="form-group">
+                <label for="id_title">Event Title:</label>
+                {{ form.title }}
+            </div>
+
+            <div class="form-group">
+                <label for="id_description">Description:</label>
+                {{ form.description }}
+            </div>
+
+            <div class="form-group">
+                <label for="id_date">Event Date:</label>
+                {{ form.date }}
+            </div>
+
+            <div class="form-group">
+                <label for="id_venue">Venue:</label>
+                {{ form.venue }}
+            </div>
+
+            <div class="form-group">
+                <label for="id_image">Event Image:</label>
+                {{ form.image }}
+                {% if event.image %}
+                    <div>
+                        <strong>Current Image:</strong>
+                        <img src="{{ event.image.url }}" alt="Event Image">
+                    </div>
+                {% endif %}
+            </div>
+
+            <div class="form-group">
+                <label for="id_video">Event Video:</label>
+                {{ form.video }}
+                {% if event.video %}
+                    <div>
+                        <strong>Current Video:</strong>
+                        <video width="150" controls>
+                            <source src="{{ event.video.url }}" type="video/mp4">
+                            Your browser does not support the video tag.
+                        </video>
+                    </div>
+                {% endif %}
+            </div>
+
+            <div class="form-group">
+                <label for="id_is_participating_event">Is this a Participating Event?</label>
+                {{ form.is_participating_event }}
+            </div>
+
+            <div class="form-group">
+                <label for="id_max_participants">Max Participants:</label>
+                {{ form.max_participants }}
+            </div>
+
+            <div class="form-group">
+                <button type="submit" class="btn btn-primary btn-block">Save Changes</button>
+                <a href="{% url 'event_detail' event.id %}" class="btn btn-secondary btn-block mt-3">Cancel</a>
+            </div>
         </form>
-      </div>
+    </div>
 </body>
 </html>

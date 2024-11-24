@@ -13,16 +13,19 @@
         {% if participants %}
             <ul class="list-group">
                 {% for participant in participants %}
-    <li class="list-group-item d-flex justify-content-between align-items-center">
-        {{ participant.username }}
-        <form method="post" action="{% url 'delete_participant' event.id participant.id %}" class="d-inline">
-            {% csrf_token %}
-            <button type="submit" class="btn btn-danger btn-sm"
-                onclick="return confirm('Are you sure you want to remove this participant? They will no longer be able to participate in this event.')">
-                Remove
-            </button>
-        </form>
-    </li>
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    <a href="{% url 'user_profile' participant.username %}">
+                        {{ participant.username }}
+                    </a>
+                    <form method="post" action="{% url 'delete_participant' event.id participant.id %}" class="d-inline">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-danger btn-sm"
+                            onclick="return confirm('Are you sure you want to remove this participant? They will no longer be able to participate in this event.')">
+                            Remove
+                        </button>
+                    </form>
+                </li>
+                
 {% endfor %}
 
             </ul>

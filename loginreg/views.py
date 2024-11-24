@@ -16,36 +16,26 @@ from django.contrib.auth import get_user_model
 User = get_user_model()
 
 def reset_password(request, uidb64, token):
+    try:
+        uid = force_str(urlsafe_base64_decode(uidb64))
+        user = User.objects.get(pk=uid)
+    except (TypeError, ValueError, OverflowError, User.DoesNotExist):
+        return HttpResponse("Invalid link.")
+    if not default_token_generator.check_token(user, token):
+        return HttpResponse("The reset link is invalid or has expired.")
+
     if request.method == 'POST':
         password1 = request.POST['password1']
         password2 = request.POST['password2']
 
         if password1 != password2:
             return HttpResponse("Passwords do not match. Please try again.")
-
-        try:
-            uid = force_str(urlsafe_base64_decode(uidb64))
-            user = User.objects.get(pk=uid)
-        except (TypeError, ValueError, OverflowError, User.DoesNotExist):
-            return HttpResponse("Invalid link.")
-
-        if default_token_generator.check_token(user, token):
-            user.set_password(password1)
-            user.save()
-            return redirect('login')  
-        else:
-            return HttpResponse("The reset link is invalid or has expired.")
-
-    try:
-        uid = force_str(urlsafe_base64_decode(uidb64))
-        user = User.objects.get(pk=uid)
-
-        if not default_token_generator.check_token(user, token):
-            return HttpResponse("The reset link is invalid or has expired.")
-    except (TypeError, ValueError, OverflowError, User.DoesNotExist):
-        return HttpResponse("Invalid link.")
-
+        user.set_password(password1)
+        print("Password reset complete. Saving user...")
+        user.save()
+        return redirect('login')
     return render(request, 'reset_password.html', {'uidb64': uidb64, 'token': token})
+
 
 
 

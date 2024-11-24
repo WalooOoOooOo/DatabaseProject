@@ -10,19 +10,24 @@
             color: red;
             font-size: 14px;
         }
+
+        /* Ensure proper spacing for posted-by details */
+        .posted-by {
+            margin-top: 10px;
+            display: block; /* Forces it onto a new line */
+        }
     </style>
     <script>
-        // Function to check the image size before form submission
         function validateImageSize(input) {
             const file = input.files[0];
-            const maxSize = 5 * 1024 * 1024; // 5 MB
+            const maxSize = 5 * 1024 * 1024; 
             const errorMessage = document.getElementById('image-size-error');
             
             if (file && file.size > maxSize) {
                 errorMessage.textContent = "The image size should not exceed 5 MB.";
-                input.value = '';  // Clear the selected file
+                input.value = '';  
             } else {
-                errorMessage.textContent = '';  // Clear error message if valid
+                errorMessage.textContent = '';  
             }
         }
     </script>
@@ -31,7 +36,7 @@
     <h1>Announcements for {{ society.name }}</h1>
 
     {% if is_admin %}
-        <a href="{% url 'create_announcement' society_id=1 %}" class="btn btn-success">Create New Announcement</a>
+        <a href="{% url 'create_announcement' society.id %}" class="btn btn-success">Create New Announcement</a>
     {% endif %}
 
     <ul>
@@ -42,7 +47,14 @@
                 {% if announcement.image %}
                     <img src="{{ announcement.image.url }}" alt="{{ announcement.title }}" style="max-width: 300px; height: auto;">
                 {% endif %}
-                <small>Posted by {{ announcement.created_by.username }} on {{ announcement.created_at }}</small>
+                
+                <small class="posted-by">
+                    Posted by 
+                    <a href="{% url 'user_profile' announcement.created_by.username %}">
+                        {{ announcement.created_by.username }}
+                    </a> 
+                    on {{ announcement.created_at }}
+                </small>
 
                 {% if is_admin %}
                     <a href="{% url 'edit_announcement' announcement.id %}" class="btn btn-warning">Edit</a>
@@ -55,9 +67,6 @@
         {% endfor %}
     </ul>
 
-    
-
     <a href="{% if society.id == 1 %}{% url 'decshome' %}{% elif society.id == 2 %}{% url 'acmhome' %}{% elif society.id == 3 %}{% url 'pcomhome' %}{% endif %}" class="btn btn-secondary">Go Back</a>
-
 </body>
 </html>
