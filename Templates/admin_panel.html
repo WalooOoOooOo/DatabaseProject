@@ -31,7 +31,7 @@
     <li>No announcements yet.</li>
     {% endfor %}
 </ul>
-<a href="{% url 'create_announcement' society.id %}">Add a new announcement?</a>
+<a href="{% url 'create_announcement' current_society.id %}">Add a new announcement?</a>
 
 <h2>Events</h2>
 <ul>
@@ -52,6 +52,8 @@
                 None
             {% endif %}
         </li>
+        {% empty %}
+        <li>No events yet added.</li>
     {% endfor %}
 </ul>
 

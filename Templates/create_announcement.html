@@ -3,19 +3,96 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Announcment Maker</title>
+    <title>Announcement Maker</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background-color: #121212; /* Dark background */
+            color: #ffffff; /* White text for readability */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        h2 {
+            font-size: 2rem;
+            margin-bottom: 20px;
+            color: #00aaff; /* Highlight color for the heading */
+            text-align: center;
+        }
+
+        form {
+            width: 100%;
+            max-width: 500px;
+            background: #1e1e1e; /* Slightly lighter black for form background */
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.6);
+        }
+
+        form input,
+        form select,
+        form textarea,
+        form button {
+            width: 100%;
+            margin-bottom: 15px;
+            padding: 10px;
+            font-size: 1rem;
+            border: 1px solid #333333;
+            border-radius: 4px;
+            background: #252525;
+            color: #ffffff;
+        }
+
+        form button {
+            cursor: pointer;
+            border: none;
+            background-color: #00aaff;
+            color: #ffffff;
+            font-size: 1.1rem;
+            font-weight: bold;
+            transition: background-color 0.3s ease;
+        }
+
+        form button:hover {
+            background-color: #0077cc; /* Slightly darker blue on hover */
+        }
+
+        .btn-secondary {
+            display: block;
+            margin-top: 20px;
+            text-align: center;
+            padding: 10px 20px;
+            font-size: 1.1rem;
+            color: #00aaff;
+            background: none;
+            border: 2px solid #00aaff;
+            border-radius: 4px;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .btn-secondary:hover {
+            background: #00aaff;
+            color: #ffffff;
+        }
+    </style>
 </head>
 <body>
     <h2>Create Announcement for {{ society.name }}</h2>
-<form method="POST" enctype="multipart/form-data">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit" class="btn btn-primary">Post Announcement</button>
-</form>
-<a href="{% if society.id == 1 %}{% url 'decshome' %}
-          {% elif society.id == 2 %}{% url 'acmhome' %}
-          {% elif society.id == 3 %}{% url 'pcomhome' %}
-          {% endif %}" class="btn btn-secondary">Go Back</a>
-
+    <form method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="btn btn-primary">Post Announcement</button>
+    </form>
+    <a href="{% if society.id == 1 %}{% url 'decshome' %}
+              {% elif society.id == 2 %}{% url 'acmhome' %}
+              {% elif society.id == 3 %}{% url 'pcomhome' %}
+              {% endif %}" 
+       class="btn-secondary">Go Back</a>
 </body>
 </html>

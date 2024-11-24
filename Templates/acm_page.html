@@ -1,17 +1,558 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ACM Home Page</title>
-</head>
-<body>
-    <a href="{% url 'upcoming_events' society_id=2 %}" class="btn btn-primary">View Upcoming Events</a>
-    <a href="{% url 'announcements_page' society_id=2 %}" class="btn btn-primary">View Announcements</a>
-    {% if show_apply_button %}
-<a href="{{ apply_membership_url }}" class="btn-apply">Apply Now</a>
-{% endif %}
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>DECS - Team Members</title>
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+        <style>
+            {% load static %}
+            body {  
+            background-color: #000000; /* Black background for the body */
+            background-image: url({% static 'images/b1.jpg' %}); /* Optional: If you want to add a subtle texture or pattern, replace with an image URL */
+            background-size: cover; /* Ensures the image covers the whole screen */
+            background-position: center; /* Centers the background image */
+            color: white; /* Default text color to white */
+            margin: 0;
+            padding: 0;
+        }
+            body::before {
+                content: '';
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: radial-gradient(circle, rgba(255, 0, 0, 0.15), rgba(255, 255, 255, 0.05) 70%);
+                mix-blend-mode: overlay;
+                pointer-events: none;
+            }
+            .textured-background {
+                background-color: transparent; /* Dark background */
+                color: #fff; /* White text */
+                padding: 20px; /* Optional: Maintain spacing */
+            }
 
-    <a href="{% url 'home' %}">Go Back</a>
-</body>
-</html>
+
+            .card {
+                height: 200px;
+                border-radius: 10px;
+                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+                background-color: #333;
+                color: #f0f0f0;
+                transition: transform 0.3s ease-in-out, background-color 0.3s ease-in-out;
+                margin-bottom: 15px;
+            }
+
+            .card:hover {
+                transform: translateY(-10px);
+                background-color: #444;
+            }
+
+            .card-img-top {
+                height: 150px;
+                object-fit: cover;
+                border-radius: 10px 10px 0 0;
+            }
+
+            .carousel-caption {
+                background-color: rgba(0, 0, 0, 0.7); /* Semi-transparent black */
+                padding: 20px;
+                border-radius: 10px; /* Optional: Rounded corners */
+            }
+
+           
+
+
+            #see-more-btn {
+                background-color: #FFA629;
+                color: #111;
+                font-size: 1rem;
+                border: none;
+                cursor: pointer;
+                text-decoration: underline;
+                margin-top: 10px;
+            }
+
+            #see-more-btn:hover {
+                background-color: #e6951d;
+            }
+            .president-card .card-img-top {
+                height: 10%; /* Make image fill the card's height */
+                object-fit: cover; /* Ensure the image covers the entire card area while maintaining aspect ratio */
+                border-radius: 10px 10px 0 0; /* Keeps rounded corners at the top */
+            }
+            
+            .card-title {
+                font-size: 1.2rem;
+                font-weight: bold;
+                color: #FFA629; /* Same text color as other cards */
+                text-align: center; /* Ensure center alignment */
+            }
+
+            .team-header h1,
+            .section-title {
+                font-size: 2.5rem; /* Large font size for emphasis */
+                font-weight: 700; /* Bold for emphasis */
+                text-transform: uppercase; /* All caps for a professional look */
+                background: linear-gradient(45deg, #FFA629, #FFDC60, #F9B800); /* Gradient effect */
+                -webkit-background-clip: text; /* Clip the background to the text */
+                color: transparent; /* Make the text transparent so the gradient shows */
+                text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.3); /* Slight shadow for depth */
+                letter-spacing: 2px; /* Spacing between letters for a more refined look */
+                animation: fadeIn 1s ease-out; /* Animation for fading in */
+                text-align: center; /* Center align the titles */
+            }
+           
+            .collapse {
+                transition: max-height 0.3s ease;
+                overflow: hidden;
+            }
+
+            .extra-cards .card {
+                margin-bottom: 15px;
+            }
+            
+
+            .collage-container {
+                display: grid;
+                grid-template-columns: repeat(3, 1fr);
+                gap: 15px;
+            }
+
+           /* Sidebar Styling */
+            .sidebar {
+                background-color: #1c1e22;
+                color: #f0f0f0;
+                display: flex;
+                flex-direction: column;
+                padding: 20px;
+                position: sticky;
+                top: 0;
+                height: 100vh;
+                width: 260px;
+                box-shadow: 2px 0 8px rgba(0, 0, 0, 0.3);
+            }
+
+            .sidebar-header {
+                text-align: center;
+            }
+
+            .sidebar-header .logo {
+                width: 150px;
+                border-radius: 50%;
+            }
+
+            .sidebar h2 {
+                font-size: 1.5rem;
+                margin: 0;
+                color: #FFA629;
+            }
+
+            .sidebar-links {
+                margin-top: 30px;
+            }
+
+            .sidebar-category {
+                font-size: 0.9rem;
+                font-weight: bold;
+                color: #888;
+                text-transform: uppercase;
+                margin-bottom: 10px;
+            }
+
+            .sidebar a {
+                display: block;
+                padding: 10px 15px;
+                margin-bottom: 10px;
+                font-size: 1rem;
+                color: #f0f0f0;
+                text-decoration: none;
+                border-radius: 8px;
+                transition: background-color 0.3s ease, color 0.3s ease;
+            }
+
+            .sidebar a:hover {
+                background-color: #FFA629;
+                color: #1c1e22;
+            }
+
+            .sidebar-footer {
+                margin-top: auto;
+            }
+
+            .sidebar-footer .btn-apply {
+                background-color: #ff0000ce;
+                color: #1c1e22;
+                font-size: 1rem;
+                padding: 12px 20px;
+                border-radius: 8px;
+                font-weight: bold;
+                text-align: center;
+            }
+
+            .sidebar-footer .btn-apply:hover {
+                background-color: #e6951d;
+                color: #fff;
+            }
+            .text-gradient {
+            background: linear-gradient(90deg, #ff0000, #ffffff, #ff0000); /* Gradient colors */
+            -webkit-background-clip: text; /* Clip gradient to text */
+            -webkit-text-fill-color: transparent; /* Make text fill transparent */
+            animation: gradient-move 3s infinite alternate; /* Animate gradient */
+        }
+
+
+            /* Main Content Styling */
+            .content {
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+            .main-content {
+                margin-left: 260px;
+                padding: 30px;
+                background-color: inherit;
+                min-height: 100vh;
+            }
+
+            /* Responsive Adjustments */
+            @media screen and (max-width: 768px) {
+                .sidebar {
+                    position: static;
+                    height: auto;
+                    width: 100%;
+                    box-shadow: none;
+                }
+
+                .main-content {
+                    margin-left: 0;
+                }
+                .team-header h1,
+                .section-title {
+                    font-size: 2rem; /* Slightly smaller font size on smaller screens */
+                }
+                .text-gradient {
+                    font-size: 1rem; /* Adjust font size for smaller screens */
+                }
+            }
+
+            @media screen and (max-width: 576px) {
+                .sidebar a {
+                    font-size: 0.9rem;
+                    padding: 8px;
+                }
+            }
+            @keyframes fadeIn {
+                0% {
+                    opacity: 0;
+                    transform: translateY(-20px);
+                }
+                100% {
+                    opacity: 1;
+                    transform: translateY(0);
+                }
+            }
+            @keyframes gradient-move {
+            0% { background-position: 0% 50%; }
+            100% { background-position: 100% 50%; }
+        }
+
+        </style>
+    </head>
+    <body>
+        <div class="d-flex">
+            <!-- Sidebar -->
+            <nav class="sidebar">
+                <div class="sidebar-header">
+                    <img src="/static/images/decs.jpg" alt="Society Logo" class="logo">
+                    <h2 class="mt-3">_________________</h2>
+                </div>
+                <div class="sidebar-links">
+                    <h5 class="sidebar-category">Navigation</h5>
+                    <a href="{% url 'home' %}">Home</a>
+                    <a href="{% url 'upcoming_events' society_id=2 %}">Upcoming Events</a>
+                    <a href="{% url 'announcements_page' society_id=2 %}">Announcements</a>
+                    <h5 class="sidebar-category mt-4">Teams</h5>
+                    <a href="#excom-section">EXCOM</a>
+                    <a href="#extended-excom-section">Extended EXCOM</a>
+                </div>
+                <div class="sidebar-footer mt-auto">
+                    {% if show_apply_button %}
+        <a href="{{ apply_membership_url }}" class="btn btn-apply w-100">Apply Now</a>
+    {% endif %}
+                </div>
+            </nav>
+        
+        
+        
+        <div class="container py-5">
+            <!-- Header -->
+            <div class="jumbotron text-center textured-background py-5">
+                <h1 class="display-3 text-gradient">DECS</h1>
+                <p class="lead text-light">The heart of innovation and leadership</p>
+            </div>
+
+            <div id="titleCarousel" class="carousel slide" data-ride="carousel">
+                <div class="carousel-inner">
+                    <div class="carousel-item active">
+                        <div class="d-flex justify-content-center align-items-center" style="height: 300px; background: transparent;">
+                            <h1 class="display-3 text-white">DECS</h1>
+                        </div>
+                    </div>
+                    <div class="carousel-item">
+                        <div class="d-flex justify-content-center align-items-center" style="height: 300px; background: transparent;">
+                            <h1 class="display-3 text-white">Leadership</h1>
+                        </div>
+                    </div>
+                    <div class="carousel-item">
+                        <div class="d-flex justify-content-center align-items-center" style="height: 300px; background: transparent;">
+                            <h1 class="display-3 text-white">Innovation</h1>
+                        </div>
+                    </div>
+                </div>
+                <a class="carousel-control-prev" href="#titleCarousel" role="button" data-slide="prev">
+                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                    <span class="sr-only">Previous</span>
+                </a>
+                <a class="carousel-control-next" href="#titleCarousel" role="button" data-slide="next">
+                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                    <span class="sr-only">Next</span>
+                </a>
+            </div>
+            
+               
+        
+        <!-- EXCOM Section -->
+    <div id="excom-section" class="mb-5">
+        <h2 class="section-title text-center mb-4">EXCOM</h2>
+        <div class="container">
+            <div class="row">
+                <!-- First Row: Displayed Cards -->
+                <div class="col-12 col-sm-6 col-md-4 mb-3">
+                    <div class="card text-center">
+                        <img src="https://via.placeholder.com/150" class="card-img-top" alt="President">
+                        <div class="card-body">
+                            <h5 class="card-title">President</h5>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-12 col-sm-6 col-md-4 mb-3">
+                    <div class="card text-center">
+                        <img src="https://via.placeholder.com/150" class="card-img-top" alt="Vice President">
+                        <div class="card-body">
+                            <h5 class="card-title">Vice President</h5>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-12 col-sm-6 col-md-4 mb-3">
+                    <div class="card text-center">
+                        <img src="https://via.placeholder.com/150" class="card-img-top" alt="General Secretary">
+                        <div class="card-body">
+                            <h5 class="card-title">Gen Sec</h5>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Second Row: Initially Hidden Cards -->
+            <div class="row collapse" id="extendedExcomRow2">
+                <div class="col-12 col-sm-6 col-md-4 mb-3">
+                    <div class="card text-center">
+                        <img src="https://via.placeholder.com/150" class="card-img-top" alt="Tech Head">
+                        <div class="card-body">
+                            <h5 class="card-title">Tech Head</h5>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-12 col-sm-6 col-md-4 mb-3">
+                    <div class="card text-center">
+                        <img src="https://via.placeholder.com/150" class="card-img-top" alt="Content Head">
+                        <div class="card-body">
+                            <h5 class="card-title">Content Head</h5>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-12 col-sm-6 col-md-4 mb-3">
+                    <div class="card text-center">
+                        <img src="https://via.placeholder.com/150" class="card-img-top" alt="MNP Head">
+                        <div class="card-body">
+                            <h5 class="card-title">MNP Head</h5>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Third Row: Initially Hidden Cards -->
+            <div class="row collapse" id="extendedExcomRow3">
+                <div class="col-12 col-sm-6 col-md-4 mb-3">
+                    <div class="card text-center">
+                        <img src="https://via.placeholder.com/150" class="card-img-top" alt="Design Head">
+                        <div class="card-body">
+                            <h5 class="card-title">Design Head</h5>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-12 col-sm-6 col-md-4 mb-3">
+                    <div class="card text-center">
+                        <img src="https://via.placeholder.com/150" class="card-img-top" alt="Social Media Head">
+                        <div class="card-body">
+                            <h5 class="card-title">Social Media Head</h5>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-12 col-sm-6 col-md-4 mb-3">
+                    <div class="card text-center">
+                        <img src="https://via.placeholder.com/150" class="card-img-top" alt="Marketing Head">
+                        <div class="card-body">
+                            <h5 class="card-title">Marketing Head</h5>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Expand Button for EXCOM -->
+            <div class="text-center mt-3">
+                <button class="btn btn-link" id="see-more-extended" data-toggle="collapse" data-target="#extendedExcomRow2, #extendedExcomRow3">Expand</button>
+            </div>
+        </div>
+    </div>
+
+
+        
+    <!-- Extended Excom Section -->
+    <div id="extended-excom-section" class="mb-5">
+        <h2 class="section-title text-center mb-4">Extended EXCOM</h2>
+        <div class="container">
+            <div class="row">
+                <!-- First Row: Displayed Cards -->
+                <div class="col-12 col-sm-6 col-md-4 mb-3">
+                    <div class="card text-center">
+                        <img src="https://via.placeholder.com/150" class="card-img-top" alt="Event Manager">
+                        <div class="card-body">
+                            <h5 class="card-title">Event Manager</h5>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-12 col-sm-6 col-md-4 mb-3">
+                    <div class="card text-center">
+                        <img src="https://via.placeholder.com/150" class="card-img-top" alt="Marketing Head">
+                        <div class="card-body">
+                            <h5 class="card-title">Marketing Head</h5>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-12 col-sm-6 col-md-4 mb-3">
+                    <div class="card text-center">
+                        <img src="https://via.placeholder.com/150" class="card-img-top" alt="Treasurer">
+                        <div class="card-body">
+                            <h5 class="card-title">Treasurer</h5>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Second Row: Initially Hidden Cards -->
+            <div class="row collapse" id="extendedExcomRow2">
+                <div class="col-12 col-sm-6 col-md-4 mb-3">
+                    <div class="card text-center">
+                        <img src="https://via.placeholder.com/150" class="card-img-top" alt="SOP Head">
+                        <div class="card-body">
+                            <h5 class="card-title">SOP Head</h5>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-12 col-sm-6 col-md-4 mb-3">
+                    <div class="card text-center">
+                        <img src="https://via.placeholder.com/150" class="card-img-top" alt="GR Head">
+                        <div class="card-body">
+                            <h5 class="card-title">GR Head</h5>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-12 col-sm-6 col-md-4 mb-3">
+                    <div class="card text-center">
+                        <img src="https://via.placeholder.com/150" class="card-img-top" alt="Tech Head">
+                        <div class="card-body">
+                            <h5 class="card-title">Tech Head</h5>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Third Row: Initially Hidden Cards -->
+            <div class="row collapse" id="extendedExcomRow3">
+                <div class="col-12 col-sm-6 col-md-4 mb-3">
+                    <div class="card text-center">
+                        <img src="https://via.placeholder.com/150" class="card-img-top" alt="Content Head">
+                        <div class="card-body">
+                            <h5 class="card-title">Content Head</h5>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-12 col-sm-6 col-md-4 mb-3">
+                    <div class="card text-center">
+                        <img src="https://via.placeholder.com/150" class="card-img-top" alt="Social Media Head">
+                        <div class="card-body">
+                            <h5 class="card-title">Social Media Head</h5>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-12 col-sm-6 col-md-4 mb-3">
+                    <div class="card text-center">
+                        <img src="https://via.placeholder.com/150" class="card-img-top" alt="Design Head">
+                        <div class="card-body">
+                            <h5 class="card-title">Design Head</h5>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Expand Button for Extended Excom -->
+            <div class="text-center mt-3">
+                <button class="btn btn-link" id="see-more-extended" data-toggle="collapse" data-target="#extendedExcomRow2, #extendedExcomRow3">Expand</button>
+            </div>
+        </div>
+    </div>
+
+
+
+        <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.4.4/dist/umd/popper.min.js"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    </body>
+    </html>
+    <script>
+    document.querySelectorAll('.btn-link').forEach(function(button) {
+        button.addEventListener('click', function() {
+            const targetIds = this.getAttribute('data-target').split(',');
+
+            // Toggle the visibility of the targeted sections
+            targetIds.forEach(function(targetId) {
+                const target = document.querySelector(targetId.trim());
+                target.classList.toggle('collapse'); // Toggle the collapse class
+            });
+
+            // Update the button text based on whether content is expanded or collapsed
+            if (button.textContent === 'Expand') {
+                button.textContent = 'Collapse'; // Change text to "Collapse" when expanded
+            } else {
+                button.textContent = 'Expand'; // Change text to "Expand" when collapsed
+            }
+        });
+    });
+    </script>
+
+
