@@ -57,6 +57,8 @@
     {% endfor %}
 </ul>
 
+<a href="{% url 'create_event' current_society.id %}">Schedule a new event?</a>
+
 <h2>Current Members</h2>
 <ul>
     {% for member in members %}
