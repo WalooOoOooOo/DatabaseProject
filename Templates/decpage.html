@@ -1,3 +1,4 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -6,10 +7,10 @@
     <title>DECS - Team Members</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <style>
-        {% load static %}
+        
         body {  
         background-color: #000000; /* Black background for the body */
-        background-image: url({% static 'images/b1.jpg' %}); /* Optional: If you want to add a subtle texture or pattern, replace with an image URL */
+         /* Optional: If you want to add a subtle texture or pattern, replace with an image URL */
         background-size: cover; /* Ensures the image covers the whole screen */
         background-position: center; /* Centers the background image */
         color: white; /* Default text color to white */
@@ -31,9 +32,21 @@
             background-color: transparent; /* Dark background */
             color: #fff; /* White text */
             padding: 20px; /* Optional: Maintain spacing */
+            background-image: url('static/images/home.jpg');
+        }
+        .hero-background {
+            position: fixed;           /* Fixed ensures it stays static during scroll if needed */
+            top: 0;
+            left: 0;
+            width: 100vw;             /* 100% of the viewport width */
+            height: 100vh;            /* 100% of the viewport height */
+            background-size: cover;   /* Ensures the image scales proportionally to cover the viewport */
+            background-position: center; /* Centers the image for a balanced layout */
+            z-index: -1;              /* Pushes the background behind all content */
+            opacity: 1;               /* Ensures the image is fully visible */
+            filter: brightness(50%);
         }
 
-</nav>
 
         .card {
             height: 200px;
@@ -287,7 +300,8 @@
     
     
     
-    <div class="container py-5">
+    <div class="container  py-5">
+        <img src="{% static 'images/b1.jpg' %}" class="hero-background">
         <!-- Header -->
         <div class="jumbotron text-center textured-background py-5">
             <h1 class="display-3 text-gradient">DECS</h1>
