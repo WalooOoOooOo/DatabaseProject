@@ -58,7 +58,7 @@
         .form-container {
             display: flex;
             justify-content: center;
-            align-items: top;
+            align-items: flex-start; /* Changed alignment to flex-start */
             padding: 100px 50px 0px 50px;
             background-color: rgba(0, 0, 0, 1);
         }
@@ -166,6 +166,13 @@
         a:hover {
             text-decoration: underline;
         }
+
+        /* reCAPTCHA container styling */
+        .recaptcha-container {
+            margin-top: 20px;
+            display: flex;
+            justify-content: center; /* Center-align the CAPTCHA */
+        }
     </style>
 </head>
 <body>
@@ -183,7 +190,9 @@
                     <input type="password" placeholder="Password" id="password" name="pass">
                     
                     <!-- reCAPTCHA Widget -->
-                    <div class="g-recaptcha" data-sitekey="6Leq1YcqAAAAAGwbckKPT2wJJSlTkWALVrVzde0Q"></div>
+                    <div class="recaptcha-container">
+                        <div class="g-recaptcha" data-sitekey="6Leq1YcqAAAAAGwbckKPT2wJJSlTkWALVrVzde0Q"></div>
+                    </div>
                     
                     <button type="submit">Log In</button>
                     <a href="{% url 'signer' %}">Create an account</a>
