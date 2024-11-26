@@ -3,122 +3,325 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Forums</title>
+    <title>Forum</title>
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Lobster&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
-
+    
     <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
     {% load static %}
     <style>
         body {
-            font-family: 'c', sans-serif; /* Change to c */
-            background-color: #000; /* Black background */
-            color: #FFFFFF; /* Darker yellow text */
+            font-family: 'Open Sans', sans-serif;
+            background-color: #000;
+            color: #fff;
+        }
+        .title-forum {
+            text-align: center;
+            text-transform: uppercase;
+            font-weight: bold;
+            color: transparent;
+            background-image: linear-gradient(45deg, #ff7e5f, #feb47b); /* Gradient effect */
+            -webkit-background-clip: text;
+            background-clip: text;
+            font-size: 3rem; /* Adjust size as necessary */
+            margin-bottom: 1.5rem;
+            letter-spacing: 2px;
+            position: relative;
+            opacity: 0; /* Start with hidden text */
+            animation: textSlideIn 1s forwards, underlineEffect 1s 1s forwards;
+        }
+        .title-forum::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 4px;
+            background: #ffa629; /* Underline color */
+            transition: width 0.5s ease;
+        }
+        .new-post {
+            animation: highlightNewPost 4s ease-in-out forwards; /* 4 seconds animation */
+            border: 3px solid #ffa629; /* Border color for new posts */
+            background-color: #2c2c2c; /* Slightly darker background */
+            margin-top: 20px;
+            padding: 10px;
+        }
+
+        .sidebar {
+            width: 280px;
+            background-color: #1a1a1a;
+            color: #ffa629;
+            height: 100vh;
+            position: fixed;
+            top: 0;
+            padding-top: 20px;
+        }
+
+        .sidebar .nav-link {
+            color: #ffa629;
+        }
+
+        .sidebar .nav-link:hover {
+            color: #fff;
+        }
+
+        .main-content {
+            margin-left: 280px;
+            padding: 20px;
         }
 
         .navbar {
-            background-color: rgba(0, 0, 0, 0.5) !important; /* Black with 50% opacity for transparency */
-            z-index: 2; /* Above the background */
-            position: relative; /* Ensure it's positioned correctly */
+            background-color: rgba(0, 0, 0, 0.5) !important;
+            z-index: 2;
+            position: relative;
         }
 
         .navbar-brand, .nav-link {
-            color: #fff !important; /* White text */
+            color: #fff !important;
+        }
+                        /* General sidebar link styles */
+                        .sidebar .nav-link {
+            transition: all 0.3s ease;
+        }
+
+        /* Hover effect for sidebar navigation links */
+        .sidebar .nav-link:hover {
+            background-color: #ffa629; /* Light orange color */
+            color: #fff;
+            text-decoration: none;
+        }
+
+        /* Hover effect for active profile link */
+        .sidebar .sidebar-footer a:hover {
+            background-color: #ffa629; /* Light orange color */
+            color: #fff;
+            text-decoration: none;
+        }
+
+        /* Hover effect for the dropdown menu items */
+        .sidebar .dropdown-item:hover {
+            background-color: #ffa629; /* Light orange color */
+            color: #fff;
+        }
+
+        /* Optional: For a smooth transition effect */
+        .sidebar .nav-link, .sidebar .dropdown-item {
+            transition: background-color 0.3s ease, color 0.3s ease;
         }
 
         .btn-primary {
-            background-color: #ffa629; /* Darker yellow button */
+            background-color: #ffa629;
             border-color: #ffa629;
-            color: #000; /* Black text on button */
+            color: #000;
         }
 
         .btn-primary:hover {
-            background-color: #C9A000; /* Even darker yellow on hover */
+            background-color: #C9A000;
         }
 
         .card {
-            background-color: #1a1a1a; /* Dark gray for card background */
-            color: #ffa629; /* Darker yellow text in cards*/
+            background-color: #1a1a1a;
+            color: #ffa629;
             border: none;
         }
 
         footer {
-            background-color: #000; /* Black background for footer */
-            color: #ffa629; /* Darker yellow text */
+            background-color: #000;
+            color: #ffa629;
         }
 
         footer a {
             color: #ffa629;
         }
+
+        .post-card {
+            margin-bottom: 20px;
+            background-color: #1a1a1a;
+            border: none;
+            padding: 20px;
+        }
+
+        .post-card h2 {
+            color: #ffa629;
+        }
+
+        .post-card a {
+            color: #ffa629;
+        }
+
+        .post-card p {
+            color: #ddd;
+        }
+        /* Profile card container (position it in top-right corner) */
+        .profile-card-container {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            z-index: 9999;
+        }
+
+        /* Profile card styling */
+        .profile-card {
+            width: 250px;
+            padding: 15px;
+            background-color: #5e5a5a;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+        }
+
+        /* Profile picture styling */
+        .profile-pic {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-bottom: 10px;
+        }
+
+        /* Profile info section */
+        .profile-info {
+            width: 100%;
+        }
+
+        /* Profile name styling */
+        .profile-name {
+            font-size: 16px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        /* Dropdown button styling */
+        .dropdown-toggle {
+            width: 100%;
+            text-align: center;
+        }
+
+        /* Optional: Add hover effect for the dropdown */
+        .dropdown-item:hover {
+            background-color: #ffa629;
+            color: white;
+        }
+
+
+            @keyframes textSlideIn {
+                0% {
+                    transform: translateY(-30px);
+                    opacity: 0;
+                }
+                100% {
+                    transform: translateY(0);
+                    opacity: 1;
+                }
+            }
+         @keyframes highlightNewPost {
+            0% {
+                transform: scale(1);
+                opacity: 0;
+            }
+            50% {
+                transform: scale(1.05); /* Scale the post slightly */
+                opacity: 1;  /* Make it visible */
+            }
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
     </style>
 </head>
-<body>
-    <nav class="navbar navbar-expand-lg navbar-dark bg-transparent">
-        <a class="navbar-brand" href="#">CMS</a>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav ml-auto">
-                <li class="nav-item active">
-                    <a class="nav-link" href="{% url 'home' %}">Home <span class="sr-only">(current)</span></a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#">About</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#">Events</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#">Contact</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="{% url 'forumhome'%}">Forum</a>
-                </li>
-                <li class="nav-item"><a class="nav-link" href="{% url 'user_profile' user.username %}">Profile</a></li>
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+<body>  
+    <div class="profile-card-container">
+        <div class="profile-card card">
+            <img src="{{ user.profile_picture.url }}" class="profile-pic">
+            <div class="profile-info">
+                <p class="text-white mb-2"><a href="{% url 'user_profile' user.username %}" class="text-white">{{ user.username }}</a></p>  
+                <div class="dropdown">
+                    <button class="btn btn-secondary dropdown-toggle" type="button" id="profileDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         More
-                    </a>
-                    <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
+                    </button>
+                    <div class="dropdown-menu" aria-labelledby="profileDropdown">
                         <a class="dropdown-item" href="#">Gallery</a>
                         <a class="dropdown-item" href="#">Resources</a>
-                        <div class="dropdown-divider"></div>
                         <a class="dropdown-item" href="#">Help</a>
                     </div>
-                </li>
-                <li class="nav-item">
-                    <a href="{% url 'logout' %}" class="nav-link btn btn-primary text-white ml-3">Logout</a>
-                </li>
-            </ul>
+                </div>
+            </div>
         </div>
-    </nav>
-
-    <h1>Forum Page</h1>
-    <a href="{% url 'home' %}">Home</a>
-    <form method="GET" action="">
-        <input type="text" name="q" placeholder="Search posts..." value="{{ request.GET.q }}">
-        <button type="submit">Search</button>
-    </form>
-    <a href="{% url 'forumcreate' %}">Create New Post</a>
-
-    {% for item in posts_with_societies %}
-    <div class="card mb-3">
-        <h2><a href="{% url 'forumpostdetail' item.post.id %}">{{ item.post.title }}</a></h2>
-        <p>{{ item.post.content|truncatewords:20 }}</p>
-        <p>By <a href="{% url 'user_profile' item.post.author.username %}">{{ item.post.author.username }}</a> on {{ item.post.created_at }}</p>
-        {% for society in item.author_societies %}
-            <p>Member of <strong>{{ society.society_name }}</strong> as <em>{{ society.position }}</em></p>
-        {% endfor %}
     </div>
-{% endfor %}
 
+    <!-- Sidebar -->
+<nav class="sidebar bg-dark d-flex flex-column p-4 position-fixed" style="width: 250px; height: 100vh;">
+    <!-- Sidebar Header with Logo -->
+    <div class="sidebar-header text-center mb-4">
+        <img src="/static/images/new.jpg" alt="Society Logo" class="logo mb-3" style="width: 80%; max-width: 200px;">
+        <h2 class="text-white">_____________</h2>
+    </div>
 
-    <a href="{% url 'home'%}">Go Back</a>
+    <!-- Navigation Links -->
+    <div class="sidebar-links">
+        <!-- Navigation Category -->
+        <h5 class="sidebar-category text-white mb-3">Navigation</h5>
+        <a href="{% url 'home' %}" class="nav-link text-white {% if request.resolver_match.url_name == 'home' %}active{% endif %}">Home</a>
+        <a href="{% url 'forumhome' %}" class="nav-link text-white {% if request.resolver_match.url_name == 'forumhome' %}active{% endif %}">Forum</a>
+        <a href="{% url 'upcoming_events' society_id=1 %}" class="nav-link text-white">Upcoming Events</a>
+        <a href="{% url 'announcements_page' society_id=1 %}" class="nav-link text-white">Announcements</a>
 
+        <!-- Societies Section -->
+        <h5 class="sidebar-category text-white mt-4 mb-3">Societies</h5>
+        <div class="ml-2">
+            <a href="{% url 'decshome' %}" class="nav-link text-white {% if request.resolver_match.url_name == 'decshome' %}active{% endif %}">DECS</a>
+            <a href="{% url 'acmhome' %}" class="nav-link text-white {% if request.resolver_match.url_name == 'acmhome' %}active{% endif %}">ACM</a>
+            <a href="{% url 'pcomhome' %}" class="nav-link text-white {% if request.resolver_match.url_name == 'pcomhome' %}active{% endif %}">Procom</a>
+        </div>
+    </div>
+
+    <div class="sidebar-footer mt-auto">
+        <!-- Logout Button -->
+        <a href="{% url 'logout' %}" class="nav-link btn btn-primary text-white mt-2">Logout</a>
+    </div>
+</nav>
+    <!-- Main Content -->
+    <div class="main-content">
+       <!-- Title Update -->
+       <h1 class="title-forum">Forum Discussions</h1>
+       <form method="GET" action="" class="d-flex justify-content-center mb-4">
+            <div class="input-group w-50">
+                <input type="text" name="q" class="form-control" placeholder="Search posts..." value="{{ request.GET.q }}">
+                <div class="input-group-append">
+                    <button type="submit" class="btn btn-primary">Search</button>
+                </div>
+            </div>
+        </form>
+        <a href="{% url 'forumcreate' %}" class="btn btn-primary mb-4">Create New Post</a>
+
+       {% for item in posts_with_societies %}
+            <div class="post-card card {% if item.post.is_new %}new-post{% endif %}">
+                <h2><a href="{% url 'forumpostdetail' item.post.id %}">{{ item.post.title }}</a></h2>
+                <p>{{ item.post.content|truncatewords:20 }}</p>
+                <p>By <a href="{% url 'user_profile' item.post.author.username %}">{{ item.post.author.username }}</a> on {{ item.post.created_at }}</p>
+                {% for society in item.author_societies %}
+                    <p>Member of <strong>{{ society.society_name }}</strong> as <em>{{ society.position }}</em></p>
+                {% endfor %}
+            </div>
+        {% endfor %}
+
+    <!-- Scripts -->
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.14.7/dist/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
 </body>
 </html>
+   <script>
+  window.addEventListener('load', function() {
+        var newPosts = document.querySelectorAll('.new-post');
+        newPosts.forEach(function(post) {
+            post.classList.add('animate-post'); // Trigger animation class after page loads
+        });
+    });
+</script>
