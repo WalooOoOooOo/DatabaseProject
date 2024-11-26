@@ -124,14 +124,6 @@
                 {% if user.is_authenticated and admin_panel_accessible %}
                 <li class="nav-item"><a class="nav-link" href="{% url 'apanel' %}">Go to Admin Panel</a></li>
                 {% endif %}
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">More</a>
-                    <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
-                        <a class="dropdown-item" href="#">Gallery</a>
-                        <a class="dropdown-item" href="#">Resources</a>
-                        <div class="dropdown-divider"></div>
-                        <a class="dropdown-item" href="#">Help</a>
-                    </div>
                 </li>
                 <li class="nav-item"><a href="{% url 'logout' %}" class="nav-link btn btn-primary text-white ml-3">Logout</a></li>
             </ul>
