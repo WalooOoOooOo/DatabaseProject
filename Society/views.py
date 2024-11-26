@@ -11,6 +11,7 @@ from forum.models import Post, Comment
 from .forms import ProfilePictureForm
 from django.contrib import messages
 from django.contrib.messages import get_messages
+from django.db import connection
 
 @login_required
 def remove_member(request, society_id, user_id):
@@ -44,18 +45,24 @@ def profile_view(request, username):
     admin_societies = user.society_admins.all()
     participation_details = ParticipationDetail.objects.filter(participant=user)
     membership_applications = MembershipApplication.objects.filter(user=user)
+    user_posts = Post.objects.filter(author=user).order_by('-created_at')  # Fetch user posts
+    user_comments = Comment.objects.filter(author=user).order_by('-created_at')  # Fetch user comments
+
     if request.method == "POST" and request.user == user:
         form = ProfilePictureForm(request.POST, request.FILES, instance=user)
         if form.is_valid():
             form.save()
     else:
         form = ProfilePictureForm(instance=user) if request.user == user else None
+
     context = {
         "user": user,
         "societies": societies,
         "admin_societies": admin_societies,
         "participation_details": participation_details,
         "membership_applications": membership_applications,
+        "user_posts": user_posts,  
+        "user_comments": user_comments,  
         "form": form,
     }
     return render(request, "profile.html", context)

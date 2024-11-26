@@ -255,15 +255,18 @@
     {% endif %}
 
     <h2>Recent Posts</h2>
-    {% if user_posts %}
-        <ul>
-            {% for post in user_posts|slice:":3" %}
-                <li>{{ post.title }} - {{ post.created_at }}</li>
-            {% endfor %}
-        </ul>
-    {% else %}
-        <p>No posts created yet.</p>
-    {% endif %}
+{% if user_posts %}
+    <ul>
+        {% for post in user_posts|slice:":3" %}
+            <li>
+                <a href="{% url 'forumpostdetail' post.id %}">{{ post.title }}</a> - {{ post.created_at }}
+            </li>
+        {% endfor %}
+    </ul>
+{% else %}
+    <p>No posts created yet.</p>
+{% endif %}
+
 
     <h2>Recent Comments</h2>
     {% if user_comments %}
