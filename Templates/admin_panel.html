@@ -4,6 +4,187 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Panel</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        /* Global Styles */
+        body {
+            background-color: #2e2e2e; /* Dark background for consistency */
+            font-family: 'Aharoni', sans-serif; /* Using the Aharoni font */
+            color: #f0f0f0; /* Light text color for contrast */
+        }
+
+        header {
+            background-color: #343a40; /* Dark header for contrast */
+            color: white;
+            padding: 20px 0;
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 2rem;
+        }
+
+        nav a {
+            color: #ffffff; /* White links in the navbar */
+        }
+
+        nav a:hover {
+            color: #ff6f00; /* Highlight color on hover, orange like your theme */
+        }
+
+        h2 {
+            margin-top: 30px;
+            color: #ff6f00; /* Accent orange color for headings */
+        }
+
+        .list-group-item {
+            background-color: #3a3a3a; /* Dark list item background for consistency */
+            border: 1px solid #444; /* Slightly lighter border for contrast */
+        }
+
+        .btn-primary {
+            background-color: #007bff; /* Primary button color */
+            border-color: #007bff; /* Button border color */
+        }
+
+        .btn-primary:hover {
+            background-color: #0056b3; /* Darker shade on hover */
+            border-color: #0056b3; /* Darker border on hover */
+        }
+
+        .btn-info {
+            background-color: #17a2b8; /* Info button color */
+            border-color: #17a2b8;
+        }
+
+        .btn-info:hover {
+            background-color: #138496; /* Darker shade of info color */
+            border-color: #117a8b;
+        }
+
+        .btn-danger {
+            background-color: #dc3545; /* Danger button color */
+            border-color: #dc3545; /* Danger button border color */
+        }
+
+        .btn-danger:hover {
+            background-color: #c82333; /* Darker shade on hover */
+            border-color: #bd2130; /* Darker border on hover */
+        }
+
+        footer {
+            margin-top: 30px;
+            text-align: center;
+            color: #888; /* Muted text color for footer */
+        }
+
+        .navbar {
+            background-color: #333; /* Dark navbar */
+        }
+
+        .navbar-brand, .nav-link {
+            color: #f0f0f0; /* Light navbar links */
+        }
+
+        .navbar-brand:hover, .nav-link:hover {
+            color: #ff6f00; /* Hover color for navbar */
+        }
+
+        .sidebar-header img {
+            width: 80%;
+            max-width: 200px;
+        }
+
+        .sidebar-category {
+            color: #f0f0f0;
+            font-size: 1.2rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header class="my-4">
+            <h1 class="text-center">Admin Panel for {{ current_society.name }}</h1>
+            <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+                <a class="navbar-brand" href="{% url 'home' %}">Home</a>
+                <a class="nav-link" href="{% url 'forumhome' %}">Forum</a>
+            </nav>
+        </header>
+
+        <section>
+            <h2>Pending Membership Requests</h2>
+            <ul class="list-group mb-4">
+                {% for request in pending_requests %}
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        {{ request.user.username }}
+                        <a href="{% url 'viewmember' request.id %}" class="btn btn-info btn-sm">View Application</a>
+                    </li>
+                {% empty %}
+                    <li class="list-group-item">No pending requests</li>
+                {% endfor %}
+            </ul>
+
+            <h2>Announcements</h2>
+            <ul class="list-group mb-4">
+                {% for announcement in announcements %}
+                    <li class="list-group-item">{{ announcement.title }} <small class="text-muted">({{ announcement.created_at }})</small></li>
+                {% empty %}
+                    <li class="list-group-item">No announcements yet.</li>
+                {% endfor %}
+            </ul>
+            <a href="{% url 'create_announcement' current_society.id %}" class="btn btn-primary">Add a new announcement?</a>
+
+            <h2>Events</h2>
+            <ul class="list-group mb-4">
+                {% for event_detail in event_participation %}
+                    <li class="list-group-item">
+                        <a href="{% url 'event_detail' event_detail.event.id %}">{{ event_detail.event.title }}</a><br>
+                        Participants: 
+                        <a href="{% url 'event_participants' event_detail.event.id %}">{{ event_detail.participants_count }}</a> / 
+                        {% if event_detail.event.max_participants %}
+                            {{ event_detail.event.max_participants }}
+                        {% else %}
+                            None
+                        {% endif %}
+                    </li>
+                {% empty %}
+                    <li class="list-group-item">No events found.</li>
+                {% endfor %}
+            </ul>
+            <a href="{% url 'create_event' current_society.id %}" class="btn btn-primary">Add a new event?</a>
+
+            <h2>Manage Members</h2>
+            <ul class="list-group mb-4">
+                {% for member in current_society.members.all %}
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        {{ member.user.username }}
+                        <a href="{% url 'view_member_profile' member.id %}" class="btn btn-info btn-sm">View Profile</a>
+                    </li>
+                {% empty %}
+                    <li class="list-group-item">No members yet.</li>
+                {% endfor %}
+            </ul>
+
+        </section>
+    </div>
+
+    <footer class="my-4">
+        <p>&copy; 2024 {{ current_society.name }} - Admin Panel</p>
+    </footer>
+
+    <!-- Optional JS and Bootstrap JS scripts -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>
+
+<!-- <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel</title>
 </head>
 <body>
     <h1><a href="{% url 'home'%}">Home</a></h1>
@@ -80,4 +261,4 @@
 
 
 </body>
-</html>
+</html> -->

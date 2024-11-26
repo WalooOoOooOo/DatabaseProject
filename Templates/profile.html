@@ -4,6 +4,270 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Profile</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', sans-serif;
+            background-color: #f9f6f2;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 240px;
+            height: 100vh;
+            background-color: #2c2016;
+            color: white;
+            padding: 20px 15px;
+            box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .sidebar img {
+            width: 100px;
+            height: 100px; /* Ensure the height and width are the same */
+            border-radius: 50%; /* This makes the logo round */
+            margin-bottom: 20px;
+            object-fit: cover; /* Ensures the logo is properly scaled without distortion */
+        }
+
+        .sidebar h3 {
+            text-align: center;
+            margin-bottom: 25px;
+            font-weight: bold;
+            font-size: 18px;
+        }
+        .sidebar ul {
+            list-style: none;
+            padding: 0;
+            width: 100%;
+        }
+        .sidebar ul li {
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+        }
+        .sidebar ul li a {
+            color: #fff;
+            text-decoration: none;
+            font-size: 16px;
+            padding: 10px;
+            border-radius: 5px;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .sidebar ul li a:hover {
+            background-color: #6d462d;
+        }
+        .sidebar .btn {
+            margin-top: 20px;
+            width: 100%;
+            text-align: center;
+        }
+
+        /* Content */
+        .content {
+            margin-left: 260px;
+            margin-top: 20px;
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            gap: 20px;
+        }
+
+        .left-section, .right-section {
+            width: 48%;
+            background: #fff;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            overflow: hidden;
+        }
+
+        .left-section {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .left-section img {
+            border-radius: 50%;
+            margin: 20px 0;
+            border: 4px solid #e2d6cc;
+        }
+
+        h2, h3 {
+            color: #d1d1d1;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+
+        .header {
+            display: flex;
+            justify-content: flex-start;
+            align-items: center;
+            background-color: #f9f6f2;
+            color: #5a3825;
+            font-size: 22px;
+            padding: 15px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        ul {
+            list-style: disc;
+            padding-left: 20px;
+        }
+
+        .btn {
+            margin-top: 10px;
+        }
+
+        /* Scrollable Area */
+        .scrollable {
+            max-height: 200px;
+            overflow-y: auto;
+        }
+
+        .scrollable::-webkit-scrollbar {
+            width: 8px;
+        }
+        .scrollable::-webkit-scrollbar-thumb {
+            background-color: #c2a78b;
+            border-radius: 5px;
+        }
+
+        .scrollable::-webkit-scrollbar-thumb:hover {
+            background-color: #a27b5c;
+        }
+    </style>
+</head>
+<body>
+   <!-- Sidebar -->
+<div class="sidebar">
+    <!-- Logo Section -->
+    <div class="logo-container" style="text-align: center;">
+        <img src="/static/images/b2.jpg" alt="CMS Logo" class="rounded-circle" style="width: 80px; height: 80px; object-fit: cover;">
+    </div>
+
+    <!-- Navigation Section -->
+    <h3 class="text-center" style="color: #fff; margin-top: 20px;">Navigation</h3>
+    <ul class="list-unstyled">
+        <li><a href="{% url 'home' %}"><i class="fas fa-home"></i> Home</a></li>
+        <li><a href="{% url 'forumhome' %}"><i class="fas fa-comments"></i> Forum</a></li>
+        <li><a href="{% url 'upcoming_events' society_id=1 %}"><i class="fas fa-calendar-alt"></i> Upcoming Events</a></li>
+        <li><a href="{% url 'announcements_page' society_id=1 %}"><i class="fas fa-bullhorn"></i> Announcements</a></li>
+        <li><a href="{% url 'logout' %}"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+    </ul>
+
+    <!-- Societies Section -->
+    <h3 class="text-center" style="color: #fff; margin-top: 20px;">Societies</h3>
+    <ul class="list-unstyled">
+        <li><a href="{% url 'decshome' %}"><i class="fas fa-users"></i> DECS</a></li>
+        <li><a href="{% url 'acmhome' %}"><i class="fas fa-code"></i> ACM</a></li>
+        <li><a href="{% url 'pcomhome' %}"><i class="fas fa-chart-line"></i> Procom</a></li>
+    </ul>
+
+    <!-- Footer Section -->
+    <div class="sidebar-footer mt-auto text-center">
+        <p style="font-size: 14px; color: #ddd;">&copy; 2024 CMS Portal</p>
+    </div>
+</div>
+
+
+
+
+    <!-- Content -->
+    <div class="content">
+        <!-- Left Section -->
+        <div class="left-section">
+            <h2>Personal Information</h2>
+            <p>Email: <strong>{{ user.email }}</strong></p>
+
+            <h3>Profile Picture</h3>
+            <img src="{{ user.profile_picture.url }}" alt="Profile Picture" width="120" height="120">
+            <form method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <button type="submit" class="btn btn-primary">Upload Picture</button>
+            </form>
+
+            <h3>Societies</h3>
+            <div class="scrollable">
+                {% if admin_societies %}
+                    <h4>Admin of:</h4>
+                    <ul>
+                        {% for society in admin_societies %}
+                            <li>{{ society.name }}</li>
+                        {% endfor %}
+                    </ul>
+                {% elif societies %}
+                    <h4>Member of:</h4>
+                    <ul>
+                        {% for society in societies %}
+                            <li>{{ society.name }}</li>
+                        {% endfor %}
+                    </ul>
+                {% else %}
+                    <p>Not a member of any societies.</p>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Right Section -->
+        <div class="right-section">
+            <div class="header">
+                Hi, {{ user.username }}!
+            </div>
+            <h2>Event Participation</h2>
+            <div class="scrollable">
+                {% if participation_details %}
+                    <ul>
+                        {% for participation in participation_details %}
+                            <li>
+                                Event: <strong>{{ participation.event.title }}</strong><br>
+                                Position: {{ participation.position }}
+                            </li>
+                        {% endfor %}
+                    </ul>
+                {% else %}
+                    <p>No event participation yet.</p>
+                {% endif %}
+            </div>
+
+            <h2>Membership Applications</h2>
+            <div class="scrollable">
+                {% if membership_applications %}
+                    <ul>
+                        {% for application in membership_applications %}
+                            <li>
+                                {{ application.society.name }} - Status: <strong>{{ application.status }}</strong>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                {% else %}
+                    <p>No applications submitted yet.</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+
+<!-- <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile</title>
 </head>
 <body>
     <h1>Welcome, {{ user.username }}</h1>
@@ -89,4 +353,4 @@
     {% endif %}
     <a href="{% url 'home'%}">Go Back</a>
 </body>
-</html>
+</html> -->

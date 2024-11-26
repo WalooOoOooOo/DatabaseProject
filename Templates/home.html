@@ -119,22 +119,12 @@
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav ml-auto">
                 <li class="nav-item active"><a class="nav-link" href="#">Home</a></li>
-                <li class="nav-item"><a class="nav-link" href="#">About</a></li>
-                <li class="nav-item"><a class="nav-link" href="#">Events</a></li>
-                <li class="nav-item"><a class="nav-link" href="#">Contact</a></li>
                 <li class="nav-item"><a class="nav-link" href="{% url 'forumhome' %}">Forum</a></li>
                 <li class="nav-item"><a class="nav-link" href="{% url 'user_profile' user.username %}">Profile</a></li>
                 {% if user.is_authenticated and admin_panel_accessible %}
                 <li class="nav-item"><a class="nav-link" href="{% url 'apanel' %}">Go to Admin Panel</a></li>
                 {% endif %}
                 <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">More</a>
-                    <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
-                        <a class="dropdown-item" href="#">Gallery</a>
-                        <a class="dropdown-item" href="#">Resources</a>
-                        <div class="dropdown-divider"></div>
-                        <a class="dropdown-item" href="#">Help</a>
-                    </div>
                 </li>
                 <li class="nav-item"><a href="{% url 'logout' %}" class="nav-link btn btn-primary text-white ml-3">Logout</a></li>
             </ul>
@@ -181,3 +171,31 @@
     </footer>
 </body>
 </html>
+<!-- 
+.title-forum {
+    text-align: center;
+    text-transform: uppercase;
+    font-weight: bold;
+    color: transparent; /* Make text color transparent */
+    background: linear-gradient(45deg, #ffa629, #d24b30, #ff6347, #6a0dad);
+    background-size: 300% 300%;
+    -webkit-background-clip: text; /* Clip the background to the text */
+    background-clip: text;
+    animation: gradientShift 4s ease infinite;
+    margin-bottom: 1.5rem;
+    letter-spacing: 1px;
+    border-bottom: 3px solid #ffa629;
+    padding-bottom: 10px;
+}
+
+@keyframes gradientShift {
+    0% {
+        background-position: 0% 50%;
+    }
+    50% {
+        background-position: 100% 50%;
+    }
+    100% {
+        background-position: 0% 50%;
+    }
+} -->
