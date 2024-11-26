@@ -8,61 +8,81 @@
     <style>
         /* Global Styles */
         body {
-            background-color: #25221b; /* Light background for readability */
+            background-color: #121212; /* Dark background for contrast */
             font-family: 'Arial', sans-serif;
-            color: #212529;
+            color: #f8f9fa; /* Light text for better readability */
             padding: 20px;
         }
 
         h2 {
-            color: #ffffff; /* Deep blue heading */
-            font-weight: bold;
-            margin-bottom: 20px;
-        }
-
-        p {
-            font-size: 1rem;
-            margin-bottom: 10px;
-        }
-
-        .btn-success {
-            background-color: #28a745;
-            border-color: #28a745;
-        }
-
-        .btn-success:hover {
-            background-color: #218838;
-            border-color: #1e7e34;
-        }
-
-        .btn-danger {
-            background-color: #dc3545;
-            border-color: #dc3545;
-        }
-
-        .btn-danger:hover {
-            background-color: #bd2130;
-            border-color: #b21f2d;
-        }
-
-        .btn-secondary {
-            background-color: #6c757d;
-            border-color: #6c757d;
-        }
-
-        .btn-secondary:hover {
-            background-color: #495057;
-            border-color: #495057;
+            font-size: 2rem;
+            color: #ffc107; /* Golden heading for highlight */
+            text-align: center;
+            margin-bottom: 30px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            background: linear-gradient(45deg, #ff6f61, #ffc107, #f9a825);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
         }
 
         .container {
-            background-color: #ffffff; /* White container for contrast */
-            border-radius: 8px;
-            padding: 20px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+            background-color: #1f1f1f; /* Darker container for focus */
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.6); /* Stronger shadow for depth */
             max-width: 600px;
             margin: auto;
-            margin-top: 40px;
+            margin-top: 60px;
+        }
+
+        p {
+            font-size: 1.1rem;
+            margin-bottom: 15px;
+        }
+
+        .btn {
+            border-radius: 50px; /* Rounded buttons */
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+
+        .btn-success {
+            background: linear-gradient(90deg, #28a745, #2dcc71); /* Gradient buttons */
+            border: none;
+        }
+
+        .btn-success:hover {
+            background: linear-gradient(90deg, #2dcc71, #28a745);
+        }
+
+        .btn-danger {
+            background: linear-gradient(90deg, #dc3545, #e4606d);
+            border: none;
+        }
+
+        .btn-danger:hover {
+            background: linear-gradient(90deg, #e4606d, #dc3545);
+        }
+
+        .btn-secondary {
+            background: linear-gradient(90deg, #6c757d, #7f8894);
+            border: none;
+        }
+
+        .btn-secondary:hover {
+            background: linear-gradient(90deg, #7f8894, #6c757d);
+        }
+
+        .btn-link {
+            color: #17a2b8;
+            font-weight: bold;
+            transition: color 0.3s ease;
+        }
+
+        .btn-link:hover {
+            color: #34cdeb;
+            text-decoration: underline;
         }
 
         a {
@@ -73,6 +93,14 @@
             text-decoration: underline;
         }
 
+        /* Additional Styling */
+        .btn-container {
+            display: flex;
+            justify-content: space-between;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
         .mt-3 {
             margin-top: 20px !important;
         }
@@ -80,7 +108,7 @@
 </head>
 <body>
     <div class="container">
-        <h2>Membership Request Details</h2>
+        <h2>Membership Request</h2>
         <p><strong>Name:</strong> {{ membership_request.application.first_name }} {{ membership_request.application.last_name }}</p>
         <p><strong>GPA:</strong> {{ membership_request.application.gpa }}</p>
         <p><strong>Department:</strong> {{ membership_request.application.department }}</p>
@@ -92,16 +120,17 @@
                 Not submitted
             {% endif %}
         </p>
-        <form method="post" action="{% url 'amember' membership_request.id %}" class="d-inline">
-            {% csrf_token %}
-            <button type="submit" class="btn btn-success">Approve</button>
-        </form>
-        <form method="post" action="{% url 'rmember' membership_request.id %}" class="d-inline">
-            {% csrf_token %}
-            <button type="submit" class="btn btn-danger">Reject</button>
-        </form>
-
-        <a href="{% url 'apanel' %}" class="btn btn-secondary mt-3">Go Back</a>
+        <div class="btn-container">
+            <form method="post" action="{% url 'amember' membership_request.id %}" class="d-inline">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-success">Approve</button>
+            </form>
+            <form method="post" action="{% url 'rmember' membership_request.id %}" class="d-inline">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-danger">Reject</button>
+            </form>
+        </div>
+        <a href="{% url 'apanel' %}" class="btn btn-secondary mt-3 d-block text-center">Go Back</a>
     </div>
 </body>
 </html>
