@@ -242,16 +242,6 @@
             <img src="{{ user.profile_picture.url }}" class="profile-pic">
             <div class="profile-info">
                 <p class="text-white mb-2"><a href="{% url 'user_profile' user.username %}" class="text-white">{{ user.username }}</a></p>  
-                <div class="dropdown">
-                    <button class="btn btn-secondary dropdown-toggle" type="button" id="profileDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        More
-                    </button>
-                    <div class="dropdown-menu" aria-labelledby="profileDropdown">
-                        <a class="dropdown-item" href="#">Gallery</a>
-                        <a class="dropdown-item" href="#">Resources</a>
-                        <a class="dropdown-item" href="#">Help</a>
-                    </div>
-                </div>
             </div>
         </div>
     </div>
