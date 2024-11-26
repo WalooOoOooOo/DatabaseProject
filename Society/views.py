@@ -347,10 +347,8 @@ def decs_page(request):
     ).exists() or Society.objects.filter(
         admins=request.user
     ).exists()
-
     is_member = society.members.filter(id=request.user.id).exists()
     is_admin = society.admins.filter(id=request.user.id).exists()
-
     context = {
         'society': society,
         'is_member': is_member,
@@ -358,8 +356,11 @@ def decs_page(request):
         'show_announcements': is_member or is_admin,
         'show_apply_button': not is_in_any_society and not is_member and not is_admin,
         'apply_membership_url': reverse('aform', args=[society.id]),
+        'members': society.members.all(),  
+        'admins': society.admins.all(),   
     }
     return render(request, 'decpage.html', context)
+
 
 
 
