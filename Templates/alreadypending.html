@@ -3,10 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Already Pending &#128512;</title>
+    <title>Already Pending 😊</title>
 </head>
 <body>
-    <p>Your application is already pending</p>
-    <p><a href="{% url 'decshome'%}">Go Back</a></p>
+    <p>Your application is already pending.</p>
+    <div class="col-md-12">
+        <a href="{% if society.id == 1 %}{% url 'decshome' %}{% elif society.id == 2 %}{% url 'acmhome' %}{% elif society.id == 3 %}{% url 'pcomhome' %}{% endif %}" class="btn btn-secondary">Go Back</a>
+    </div>
 </body>
 </html>

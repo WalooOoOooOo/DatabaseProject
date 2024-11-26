@@ -157,13 +157,25 @@
             <ul class="list-group mb-4">
                 {% for member in current_society.members.all %}
                     <li class="list-group-item d-flex justify-content-between align-items-center">
-                        {{ member.user.username }}
-                        <a href="{% url 'view_member_profile' member.id %}" class="btn btn-info btn-sm">View Profile</a>
+                        <div>
+                            <a href="{% url 'user_profile' member.username %}" class="text-decoration-none">
+                                {{ member.username }}
+                            </a>
+                        </div>
+                        <div>
+                            <form method="post" action="{% url 'remove_member' current_society.id member.id %}" class="d-inline">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-danger btn-sm">Remove</button>
+                            </form>
+                        </div>
                     </li>
                 {% empty %}
                     <li class="list-group-item">No members yet.</li>
                 {% endfor %}
             </ul>
+            
+            
+            
 
         </section>
     </div>
