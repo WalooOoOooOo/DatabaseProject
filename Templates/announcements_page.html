@@ -4,6 +4,164 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Announcements</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        /* Global styles */
+        body {
+            background-color: #121212; /* Dark background for body */
+            color: white; /* White text color for good contrast */
+            font-family: 'Arial', sans-serif;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 40px auto;
+            background-color: #ffffff; /* White background for container */
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+        }
+
+        h1 {
+            color: #ff8c00; /* Orange color for the title */
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .btn {
+            border-radius: 5px;
+        }
+
+        .btn-success {
+            background-color: #ff8c00; /* Orange */
+            border-color: #ff8c00;
+        }
+
+        .btn-success:hover {
+            background-color: #e07b00;
+            border-color: #e07b00;
+        }
+
+        .btn-warning {
+            background-color: #ff5722; /* Orange-red for edit */
+            border-color: #ff5722;
+        }
+
+        .btn-warning:hover {
+            background-color: #e64a19;
+            border-color: #d32f2f;
+        }
+
+        .btn-danger {
+            background-color: #d32f2f; /* Red for delete */
+            border-color: #d32f2f;
+        }
+
+        .btn-danger:hover {
+            background-color: #c62828;
+            border-color: #c21807;
+        }
+
+        .btn-secondary {
+            background-color: #121212; /* Black background for go back */
+            border-color: #121212;
+        }
+
+        .btn-secondary:hover {
+            background-color: #1c1c1c;
+            border-color: #1c1c1c;
+        }
+
+        .posted-by {
+            display: block;
+            margin-top: 10px;
+            font-size: 14px;
+            color: #bdbdbd; /* Light grey for the posted by info */
+        }
+
+        .announcement {
+            margin-bottom: 20px;
+            padding: 15px;
+            background-color: #212121; /* Darker background for individual announcements */
+            border: 1px solid #333333; /* Border around announcements */
+            border-radius: 5px;
+        }
+
+        .announcement h3 {
+            color: #ff8c00; /* Orange for announcement titles */
+            margin-bottom: 15px;
+        }
+
+        .announcement p {
+            color: #e0e0e0; /* Light gray text for body content */
+        }
+
+        .announcement img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 5px;
+            margin-top: 15px;
+        }
+
+        .error-message {
+            color: red;
+            font-size: 14px;
+        }
+
+        .container a {
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Announcements for {{ society.name }}</h1>
+
+        {% if is_admin %}
+            <a href="{% url 'create_announcement' society.id %}" class="btn btn-success mb-4">Create New Announcement</a>
+        {% endif %}
+
+        <div class="announcements-list">
+            {% for announcement in announcements %}
+                <div class="announcement">
+                    <h3>{{ announcement.title }}</h3>
+                    <p>{{ announcement.content }}</p>
+                    {% if announcement.image %}
+                        <img src="{{ announcement.image.url }}" alt="{{ announcement.title }}">
+                    {% endif %}
+                    
+                    <small class="posted-by">
+                        Posted by 
+                        <a href="{% url 'user_profile' announcement.created_by.username %}" style="color: #ff8c00;">
+                            {{ announcement.created_by.username }}
+                        </a> 
+                        on {{ announcement.created_at }}
+                    </small>
+
+                    {% if is_admin %}
+                        <div class="d-flex mt-3">
+                            <a href="{% url 'edit_announcement' announcement.id %}" class="btn btn-warning mr-2">Edit</a>
+                            <form action="{% url 'delete_announcement' announcement.id %}" method="post" style="display:inline;" onsubmit="return confirm('Are you sure you want to delete this announcement?');">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-danger">Delete</button>
+                            </form>
+                        </div>
+                    {% endif %}
+                </div>
+            {% endfor %}
+        </div>
+
+        <a href="{% if society.id == 1 %}{% url 'decshome' %}{% elif society.id == 2 %}{% url 'acmhome' %}{% elif society.id == 3 %}{% url 'pcomhome' %}{% endif %}" class="btn btn-secondary mt-4">Go Back</a>
+    </div>
+</body>
+</html>
+
+<!-- <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Announcements</title>
     <style>
         /* Optional: Style the error message */
         .error-message {
@@ -69,4 +227,4 @@
 
     <a href="{% if society.id == 1 %}{% url 'decshome' %}{% elif society.id == 2 %}{% url 'acmhome' %}{% elif society.id == 3 %}{% url 'pcomhome' %}{% endif %}" class="btn btn-secondary">Go Back</a>
 </body>
-</html>
+</html> -->

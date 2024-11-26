@@ -5,66 +5,127 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Event Details</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        /* Global Styles */
+        body {
+            background-color: #000000; /* Light gray for a clean look */
+            font-family: 'Arial', sans-serif; /* Modern, professional font */
+            color: #212529; /* Dark gray for text */
+        }
+
+        h2 {
+            color: #0056b3; /* Deep blue for headings */
+            font-weight: bold;
+        }
+
+        p {
+            font-size: 1rem;
+        }
+
+        .btn-success {
+            background-color: #198754; /* Bootstrap green for success */
+            border-color: #198754;
+        }
+
+        .btn-success:hover {
+            background-color: #145a32; /* Slightly darker green for hover */
+            border-color: #145a32;
+        }
+
+        .btn-secondary {
+            background-color: #6c757d; /* Neutral gray for secondary button */
+            border-color: #6c757d;
+        }
+
+        .btn-secondary:hover {
+            background-color: #495057; /* Darker gray for hover */
+            border-color: #495057;
+        }
+
+        .alert {
+            border-radius: 5px; /* Rounded corners for alerts */
+        }
+
+        img {
+            border: 2px solid #dee2e6; /* Light border around images */
+            border-radius: 8px;
+            margin-bottom: 15px;
+        }
+
+        video {
+            border: 2px solid #dee2e6; /* Consistent border style with images */
+            border-radius: 8px;
+        }
+
+        .container {
+            background: #ffffff; /* White background for content area */
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Subtle shadow for elevation */
+        }
+
+        .mt-3 {
+            margin-top: 20px !important;
+        }
+
+        .mt-5 {
+            margin-top: 40px !important;
+        }
+    </style>
 </head>
 <body>
     <div class="container mt-5">
         <h2>Event: {{ event.title }}</h2>
         <p><strong>Date:</strong> {{ event.date }}</p>
         <p><strong>Description:</strong> {{ event.description }}</p>
-    
+
         {% if event.image %}
             <img src="{{ event.image.url }}" alt="Event Image" class="img-fluid" style="max-width: 300px; height: auto;">
         {% endif %}
-    
+
         {% if event.video %}
             <video width="100%" controls>
                 <source src="{{ event.video.url }}" type="video/mp4">
                 Your browser does not support the video tag.
             </video>
         {% endif %}
+
         {% if event.is_participating_event %}
-        <p><strong>Remaining Slots:</strong> {{ remaining_slots }}</p>
+            <p><strong>Remaining Slots:</strong> {{ remaining_slots }}</p>
         {% endif %}
+
         {% if error %}
             <div class="alert alert-danger">{{ error }}</div>
         {% endif %}
-    
+
         {% if event.is_participating_event %}
-    <p><strong>Remaining Slots:</strong> {{ remaining_slots }}</p>
+            <p><strong>Remaining Slots:</strong> {{ remaining_slots }}</p>
 
-    {% if error %}
-        <div class="alert alert-danger">{{ error }}</div>
-    {% endif %}
+            {% if user in event.banned_participants.all %}
+                <div class="alert alert-danger">
+                    <strong>You have been removed from this event and cannot re-register.</strong>
+                </div>
+            {% elif can_participate %}
+                <form method="post" action="{% url 'add_participation_detail' event.id %}">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-success">Participate</button>
+                </form>
+            {% elif is_admin %}
+                <div class="alert alert-warning">
+                    <strong>Admins cannot participate in events.</strong>
+                </div>
+            {% else %}
+                <div class="alert alert-info">
+                    <strong>You have already registered for this event.</strong>
+                </div>
+            {% endif %}
+        {% endif %}
 
-    {% if user in event.banned_participants.all %}
-    <div class="alert alert-danger">
-        <strong>You have been removed from this event and cannot re-register.</strong>
-    </div>
-{% elif can_participate %}
-    <form method="post" action="{% url 'add_participation_detail' event.id %}">
-        {% csrf_token %}
-        <button type="submit" class="btn btn-success">Participate</button>
-    </form>
-{% elif is_admin %}
-    <div class="alert alert-warning">
-        <strong>Admins cannot participate in events.</strong>
-    </div>
-{% else %}
-    <div class="alert alert-info">
-        <strong>You have already registered for this event.</strong>
-    </div>
-{% endif %}
+        {% if user_message %}
+            <div class="alert alert-warning">{{ user_message }}</div>
+        {% endif %}
 
-{% endif %}
-
-{% if user_message %}
-    <div class="alert alert-warning">{{ user_message }}</div>
-{% endif %}
-
-
-    
         <a href="{% url 'upcoming_events' event.society.id %}" class="btn btn-secondary mt-3">Back to Events</a>
     </div>
-    
 </body>
 </html>
