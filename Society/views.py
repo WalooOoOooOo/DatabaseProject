@@ -44,9 +44,14 @@ def profile_view(request, username):
     societies = user.society_members.all()
     admin_societies = user.society_admins.all()
     participation_details = ParticipationDetail.objects.filter(participant=user)
+
     membership_applications = MembershipApplication.objects.filter(user=user)
-    user_posts = Post.objects.filter(author=user).order_by('-created_at')  # Fetch user posts
-    user_comments = Comment.objects.filter(author=user).order_by('-created_at')  # Fetch user comments
+    for application in membership_applications:
+        if application.society in societies:
+            application.status = "Accepted"  
+
+    user_posts = Post.objects.filter(author=user).order_by('-created_at') 
+    user_comments = Comment.objects.filter(author=user).order_by('-created_at')  
 
     if request.method == "POST" and request.user == user:
         form = ProfilePictureForm(request.POST, request.FILES, instance=user)
@@ -413,47 +418,62 @@ def view_membership_request(request, request_id):
     }
     return render(request, 'membership_request_detail.html', context)
 
-@login_required
 def apply_membership(request, society_id):
     society = get_object_or_404(Society, id=society_id)
 
     if MembershipRequest.objects.filter(user=request.user, society=society, status='pending').exists():
-        return render(request,'alreadypending.html')
+        return render(request, 'alreadypending.html', {'society': society})
 
     if request.method == 'POST':
         form = MembershipApplicationForm(request.POST, request.FILES)
         if form.is_valid():
-           
             application = form.save(commit=False)
             application.user = request.user
             application.society = society
             application.save()
 
-           
             MembershipRequest.objects.create(
                 user=request.user,
                 society=society,
                 application=application,
                 status='pending'
             )
-
-            return redirect('decshome')  
+            if society_id == 1:
+                return redirect('decshome')
+            elif society_id == 2:
+                return redirect('acmhome')
+            elif society_id == 3:
+                return redirect('pcomhome')
+            else:
+                return redirect(reverse('society', kwargs={'society_id': society.id}))
     else:
         form = MembershipApplicationForm()
 
     return render(request, 'apply_membership.html', {'form': form, 'society': society})
 
 
+
 @login_required
 @require_POST
 def approve_membership(request, request_id):
-    membership_request = get_object_or_404(MembershipRequest, id=request_id, society__admins=request.user)
+    membership_request = get_object_or_404(MembershipRequest, id=request_id)
+
+    if request.user not in membership_request.society.admins.all():
+        return HttpResponseRedirect(reverse('apanel'))  
+
     membership_request.status = 'approved'
-    membership_request.application.status = 'approved'
-    membership_request.application.save()
-    membership_request.society.members.add(membership_request.user)
     membership_request.save()
-    return redirect('apanel')
+    membership_request.society.members.add(membership_request.user)
+
+    MembershipApplication.objects.filter(
+        user=membership_request.user,
+        status='pending'
+    ).exclude(
+        id=membership_request.application.id
+    ).delete()
+
+    messages.success(request, f"Membership approved for {membership_request.user.username}. Other applications have been removed.")
+    return HttpResponseRedirect(reverse('apanel'))
 
 @login_required
 @require_POST
