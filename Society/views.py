@@ -484,4 +484,3 @@ def reject_membership(request, request_id):
     membership_request.application.save()
     membership_request.save()
     return redirect('apanel')
-
