@@ -1,98 +1,178 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Announcement Maker</title>
+    <title>Create Announcement</title>
+    <link href="https://fonts.googleapis.com/css2?family=Aharoni&display=swap" rel="stylesheet">
     <style>
+        /* General body settings */
         body {
             margin: 0;
-            font-family: Arial, sans-serif;
-            background-color: #121212; /* Dark background */
-            color: #ffffff; /* White text for readability */
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            min-height: 100vh;
-            padding: 20px;
+            font-family: 'Aharoni', sans-serif;
+            background: #111;
+            color: #fff;
         }
 
-        h2 {
-            font-size: 2rem;
-            margin-bottom: 20px;
-            color: #00aaff; /* Highlight color for the heading */
-            text-align: center;
+        .background {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: url("{% static 'images/su2.jpg' %}");
+            background-size: cover;
+            background-position: center 40%;
+            filter: brightness(100%); /* Slightly dimmed background for contrast */
         }
 
-        form {
+        button {
             width: 100%;
-            max-width: 500px;
-            background: #1e1e1e; /* Slightly lighter black for form background */
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.6);
-        }
-
-        form input,
-        form select,
-        form textarea,
-        form button {
-            width: 100%;
-            margin-bottom: 15px;
-            padding: 10px;
-            font-size: 1rem;
-            border: 1px solid #333333;
-            border-radius: 4px;
-            background: #252525;
-            color: #ffffff;
-        }
-
-        form button {
-            cursor: pointer;
-            border: none;
-            background-color: #00aaff;
-            color: #ffffff;
+            padding: 12px;
+            background-color: #FFA500;
+            color: #080710;
             font-size: 1.1rem;
-            font-weight: bold;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+            font-weight: 600;
+            transition: background-color 0.3s ease;
+        }
+        input, select {
+            width: 100%;
+            padding: 10px;
+            background-color: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 8px;
+            color: #fff;
+            font-size: 1rem;
+            margin-bottom: 20px;
+            box-sizing: border-box; /* Prevents size issues due to padding */
+            transition: background-color 0.3s ease;
+        }
+        input:focus, select:focus {
+            background-color: rgba(255, 255, 255, 0.2);
+            outline: none;
+            border-color: #FFA500;
+        }
+       /* Card container */
+       .container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh; /* Full viewport height to center vertically */
+        padding: 20px; /* Add padding to avoid content being flush with edges on smaller screens */
+    }
+
+            /* Form card styles */
+        .form-card {
+            background-color: rgba(0, 0, 0, 0.7);
+            padding: 25px;
+            border-radius: 15px;
+            text-align: left; /* Align content to the left */
+            max-width: 350px;
+            width: 100%;
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3); /* Floating effect */
+        }
+
+
+            /* Heading styling */
+            h1 {
+                color: #FFA500;
+                font-size: 1.8rem;  /* Reduced font size for smaller card */
+                margin-bottom: 20px;
+            }
+
+            /* Label and input fields styling */
+            label {
+                display: block;
+                margin-bottom: 5px;
+                font-size: 1rem;
+                font-weight: 500;
+                color: #fff;
+            }
+            
+            input:focus, select:focus {
+                background-color: rgba(255, 255, 255, 0.2);
+                outline: none;
+            }
+
+            /* Submit button styling */
+            button {
+            width: 100%;
+            padding: 12px;
+            background-color: #FFA500;
+            color: #080710;
+            font-size: 1.1rem;
+            border-radius: 10px;
+            border: none;
+            cursor: pointer;
+            font-weight: 600;
             transition: background-color 0.3s ease;
         }
 
-        form button:hover {
-            background-color: #0077cc; /* Slightly darker blue on hover */
+           
+        /* Link styling */
+        p {
+            margin-top: 15px;
+            font-size: 1em;
         }
 
-        .btn-secondary {
-            display: block;
-            margin-top: 20px;
-            text-align: center;
-            padding: 10px 20px;
-            font-size: 1.1rem;
-            color: #00aaff;
-            background: none;
-            border: 2px solid #00aaff;
-            border-radius: 4px;
+        a {
+            color: #97601df3;
             text-decoration: none;
-            transition: all 0.3s ease;
+        }
+        button:hover {
+            background-color: #FF8C00;
         }
 
-        .btn-secondary:hover {
-            background: #00aaff;
-            color: #ffffff;
+        /* Adjustments for mobile screens */
+        @media (max-width: 768px) {
+            .form-card {
+                max-width: 320px; /* Make the card even smaller on mobile */
+                padding: 15px;
+            }
+
+            h1 {
+                font-size: 1.5rem;  /* Reduced heading font size */
+            }
+
+            button {
+                font-size: 1rem;
+            }
         }
     </style>
 </head>
 <body>
-    <h2>Create Announcement for {{ society.name }}</h2>
-    <form method="POST" enctype="multipart/form-data">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit" class="btn btn-primary">Post Announcement</button>
-    </form>
-    <a href="{% if society.id == 1 %}{% url 'decshome' %}
-              {% elif society.id == 2 %}{% url 'acmhome' %}
-              {% elif society.id == 3 %}{% url 'pcomhome' %}
-              {% endif %}" 
-       class="btn-secondary">Go Back</a>
+    <div class="background">
+        <div class="overlay">
+            <div class="container">
+                <div class="form-card">
+                    <h1>Add Announcement Details</h1>
+                    <form method="POST" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <div class="form-group">
+                            <label for="title">Title</label>
+                            {{ form.title }}
+                        </div>
+                        <div class="form-group">
+                            <label for="image">Image</label>
+                            {{ form.image }}
+                        </div>
+                        <div class="form-group">
+                            <label for="content">Content</label>
+                            {{ form.content }}
+                        </div>
+                        <div class="form-group">
+                            <label for="is_member_specific">Is Member Specific</label>
+                            {{ form.is_member_specific }}
+                        </div>
+                        <button type="submit">Post Announcement</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
 </body>
 </html>
