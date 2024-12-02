@@ -8,18 +8,20 @@
     <style>
         /* Global Styles */
         body {
-            background-color: #000000; /* Light gray for a clean look */
+            background-color: #000000; /* Black background for a sleek look */
             font-family: 'Arial', sans-serif; /* Modern, professional font */
-            color: #212529; /* Dark gray for text */
+            color: #ffffff; /* White text for contrast */
         }
 
         h2 {
-            color: #0056b3; /* Deep blue for headings */
+            color: #ff8c00; /* Orange for headings */
             font-weight: bold;
+            margin-bottom: 20px;
         }
 
         p {
             font-size: 1rem;
+            line-height: 1.5; /* Better line spacing for readability */
         }
 
         .btn-success {
@@ -46,22 +48,20 @@
             border-radius: 5px; /* Rounded corners for alerts */
         }
 
-        img {
-            border: 2px solid #dee2e6; /* Light border around images */
+        img, video {
+            border: 2px solid #dee2e6; /* Light border around images and videos */
             border-radius: 8px;
             margin-bottom: 15px;
-        }
-
-        video {
-            border: 2px solid #dee2e6; /* Consistent border style with images */
-            border-radius: 8px;
+            max-width: 100%; /* Responsive images and videos */
+            height: auto; /* Maintain aspect ratio */
         }
 
         .container {
-            background: #ffffff; /* White background for content area */
+            background: #212529; /* Dark background for content area */
             border-radius: 8px;
             padding: 20px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Subtle shadow for elevation */
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5); /* Subtle shadow for elevation */
+            margin-top: 40px; /* Top margin for spacing */
         }
 
         .mt-3 {
@@ -80,11 +80,11 @@
         <p><strong>Description:</strong> {{ event.description }}</p>
 
         {% if event.image %}
-            <img src="{{ event.image.url }}" alt="Event Image" class="img-fluid" style="max-width: 300px; height: auto;">
+            <img src="{{ event.image.url }}" alt="Event Image" class="img-fluid">
         {% endif %}
 
         {% if event.video %}
-            <video width="100%" controls>
+            <video controls>
                 <source src="{{ event.video.url }}" type="video/mp4">
                 Your browser does not support the video tag.
             </video>
@@ -125,7 +125,7 @@
             <div class="alert alert-warning">{{ user_message }}</div>
         {% endif %}
 
-        <a href="{% url 'upcoming_events' event.society.id %}" class="btn btn-secondary mt-3">Back to Events</a>
+        <a href="{% url 'upcoming_events' event.society.id % }" class="btn btn-secondary mt-3">Back to Events</a>
     </div>
 </body>
 </html>

@@ -56,16 +56,17 @@
             outline: none;
             border-color: #FFA500;
         }
-       /* Card container */
-       .container {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        height: 100vh; /* Full viewport height to center vertically */
-        padding: 20px; /* Add padding to avoid content being flush with edges on smaller screens */
-    }
 
-            /* Form card styles */
+        /* Card container */
+        .container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh; /* Full viewport height to center vertically */
+            padding: 20px; /* Add padding to avoid content being flush with edges on smaller screens */
+        }
+
+        /* Form card styles */
         .form-card {
             background-color: rgba(0, 0, 0, 0.7);
             padding: 25px;
@@ -76,30 +77,29 @@
             box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3); /* Floating effect */
         }
 
+        /* Heading styling */
+        h1 {
+            color: #FFA500;
+            font-size: 1.8rem;  /* Reduced font size for smaller card */
+            margin-bottom: 20px;
+        }
 
-            /* Heading styling */
-            h1 {
-                color: #FFA500;
-                font-size: 1.8rem;  /* Reduced font size for smaller card */
-                margin-bottom: 20px;
-            }
+        /* Label and input fields styling */
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-size: 1rem;
+            font-weight: 500;
+            color: #fff;
+        }
 
-            /* Label and input fields styling */
-            label {
-                display: block;
-                margin-bottom: 5px;
-                font-size: 1rem;
-                font-weight: 500;
-                color: #fff;
-            }
-            
-            input:focus, select:focus {
-                background-color: rgba(255, 255, 255, 0.2);
-                outline: none;
-            }
+        input:focus, select:focus {
+            background-color: rgba(255, 255, 255, 0.2);
+            outline: none;
+        }
 
-            /* Submit button styling */
-            button {
+        /* Submit button styling */
+        button {
             width: 100%;
             padding: 12px;
             background-color: #FFA500;
@@ -112,7 +112,26 @@
             transition: background-color 0.3s ease;
         }
 
-           
+        textarea {
+            width: 100%;
+            padding: 10px;
+            background-color: rgba(255, 255, 255, 0.1); /* Matches the input fields */
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 8px;
+            color: #fff; /* Matches text color with the theme */
+            font-size: 1rem;
+            margin-bottom: 20px;
+            resize: vertical; /* Allows resizing only vertically */
+            box-sizing: border-box; /* Ensures padding doesn't affect the size */
+            transition: background-color 0.3s ease, border-color 0.3s ease;
+        }
+
+        textarea:focus {
+            background-color: rgba(255, 255, 255, 0.2); /* Slightly brighter on focus */
+            outline: none;
+            border-color: #FFA500; /* Highlight border to match button hover */
+        }
+
         /* Link styling */
         p {
             margin-top: 15px;

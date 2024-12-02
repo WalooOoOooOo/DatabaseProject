@@ -1,3 +1,4 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -8,35 +9,43 @@
     <style>
         /* Global Styles */
         body {
-            background-color: #121212; /* Dark background for contrast */
-            font-family: 'Arial', sans-serif;
-            color: #f8f9fa; /* Light text for readability */
-            padding: 20px;
+            margin: 0;
+            font-family: 'Aharoni', sans-serif;
+            background: url("{% static 'images/su2.jpg' %}") no-repeat center top/cover;
+            background-size: cover;
+            background-position: center 40%;
+            color: #fff;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
         }
 
         .container {
-            max-width: 800px;
+            max-width: 600px;
             margin: auto;
-            background-color: #1f1f1f; /* Darker container for focus */
-            border-radius: 10px;
-            padding: 20px;
-            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.6); /* Subtle shadow */
+            background-color: rgba(31, 31, 31, 0.8); /* Transparent dark background */
+            border-radius: 8px;
+            padding: 20px 25px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(8px);
         }
 
         h1, h2, h3 {
             color: #ffc107; /* Golden headings */
             text-transform: uppercase;
             letter-spacing: 1px;
-            margin-bottom: 20px;
+            margin-bottom: 15px;
         }
 
         h1 {
-            font-size: 2rem;
+            font-size: 1.8rem;
             text-align: center;
         }
 
         p, a {
-            font-size: 1rem;
+            font-size: 0.9rem;
+            line-height: 1.5;
         }
 
         a {
@@ -51,14 +60,21 @@
 
         .comment {
             background-color: #2b2b2b; /* Dark background for comments */
-            padding: 15px;
+            padding: 8px 12px;
             border-radius: 8px;
-            margin-bottom: 15px;
+            margin-bottom: 10px;
+            transition: background-color 0.3s;
+            font-size: 0.85rem;
+        }
+
+        .comment:hover {
+            background-color: #3a3a3a;
         }
 
         .btn {
             border-radius: 50px;
             font-weight: bold;
+            padding: 8px 20px;
             transition: all 0.3s ease;
         }
 
@@ -81,20 +97,37 @@
         }
 
         .form-container {
-            background-color: #2b2b2b; /* Dark form background */
-            padding: 20px;
+            background-color: #2b2b2b;
+            padding: 12px 20px;
             border-radius: 8px;
-            margin-top: 20px;
+            margin-top: 10px;
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
         }
 
         .form-container h3 {
-            margin-bottom: 15px;
+            margin-bottom: 10px;
+            font-size: 1.1rem;
+        }
+
+        .form-container textarea {
+            width: 100%;
+            min-height: 100px; /* Reduced height */
+            padding: 10px;
+            resize: vertical; /* Allows resizing only vertically */
+            border-radius: 8px;
+            background-color: #3a3a3a;
+            color: white;
+            border: 1px solid #555;
+        }
+
+        .form-container textarea:focus {
+            outline: none;
+            border-color: #ffc107; /* Focus border color */
         }
 
         .btn-submit {
             width: 100%;
-            padding: 10px;
+            padding: 8px 15px;
             background: linear-gradient(90deg, #28a745, #218838);
             border: none;
         }
@@ -105,11 +138,11 @@
 
         .go-back {
             text-align: center;
-            margin-top: 20px;
+            margin-top: 15px;
         }
 
         .go-back a {
-            font-size: 1.1rem;
+            font-size: 1rem;
             color: #ffc107;
         }
     </style>
@@ -119,9 +152,7 @@
         <h1>{{ post.title }}</h1>
         <p>{{ post.content }}</p>
         <p>
-            By <a href="{% url 'user_profile' post.author.username %}">
-                {{ post.author.username }}
-            </a> on {{ post.created_at }}
+            By <a href="{% url 'user_profile' post.author.username %}">{{ post.author.username }}</a> on {{ post.created_at }}
         </p>
 
         {% if user_society_details %}
@@ -136,9 +167,7 @@
             <div class="comment">
                 <p>{{ comment_info.comment.content }}</p>
                 <p>
-                    By <a href="{% url 'user_profile' comment_info.comment.author.username %}">
-                        {{ comment_info.comment.author.username }}
-                    </a> on {{ comment_info.comment.created_at }}
+                    By <a href="{% url 'user_profile' comment_info.comment.author.username %}">{{ comment_info.comment.author.username }}</a> on {{ comment_info.comment.created_at }}
                 </p>
                 {% if comment_info.society_details %}
                     {% for society_name, position in comment_info.society_details %}

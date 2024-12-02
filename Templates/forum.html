@@ -12,10 +12,13 @@
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
     <style>
-        body {
-            font-family: 'Open Sans', sans-serif;
-            background-color: #000;
-            color: #fff;
+       body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', sans-serif;    
+            background-image: url("{% static 'images/c.jpg' %}");
+            background-size: cover; /* Optional for making sure the image covers the whole screen */
+            background-position: center; /* Optional for centering the background */
         }
         .title-forum {
             text-align: center;
@@ -250,7 +253,7 @@
 <nav class="sidebar bg-dark d-flex flex-column p-4 position-fixed" style="width: 250px; height: 100vh;">
     <!-- Sidebar Header with Logo -->
     <div class="sidebar-header text-center mb-4">
-        <img src="/static/images/new.jpg" alt="Society Logo" class="logo mb-3" style="width: 80%; max-width: 200px;">
+        <img src="/static/images/logo.jpg" alt="Society Logo" class="logo mb-3" style="width: 80%; max-width: 200px;">
         <h2 class="text-white">_____________</h2>
     </div>
 
@@ -308,11 +311,45 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
 </body>
 </html>
-   <script>
+ <script>
   window.addEventListener('load', function() {
-        var newPosts = document.querySelectorAll('.new-post');
-        newPosts.forEach(function(post) {
-            post.classList.add('animate-post'); // Trigger animation class after page loads
-        });
-    });
+      // Animate new posts to slide in or fade in
+      var newPosts = document.querySelectorAll('.new-post');
+      newPosts.forEach(function(post) {
+          post.classList.add('animate-post'); // Trigger animation class after page loads
+      });
+
+      // Sidebar hover animation for navigation links
+      var sidebarLinks = document.querySelectorAll('.sidebar .nav-link');
+      sidebarLinks.forEach(function(link) {
+          link.addEventListener('mouseenter', function() {
+              link.style.transform = 'scale(1.1)';
+              link.style.transition = 'transform 0.3s ease';
+          });
+          link.addEventListener('mouseleave', function() {
+              link.style.transform = 'scale(1)';
+          });
+      });
+
+      // Profile card hover effect
+      var profileCard = document.querySelector('.profile-card');
+      profileCard.addEventListener('mouseenter', function() {
+          profileCard.style.transform = 'scale(1.05)';
+          profileCard.style.transition = 'transform 0.3s ease';
+      });
+      profileCard.addEventListener('mouseleave', function() {
+          profileCard.style.transform = 'scale(1)';
+      });
+
+      // Smooth scrolling effect for anchor links
+      document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+          anchor.addEventListener('click', function(e) {
+              e.preventDefault();
+              document.querySelector(this.getAttribute('href')).scrollIntoView({
+                  behavior: 'smooth'
+              });
+          });
+      });
+  });
 </script>
+
