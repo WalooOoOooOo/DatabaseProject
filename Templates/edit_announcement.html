@@ -1,3 +1,4 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -7,62 +8,132 @@
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <style>
         body {
-            background-color: #121212;
+            margin: 0;
+            font-family: 'Aharoni', sans-serif;
+            background: url("{% static 'images/su2.jpg' %}") no-repeat center top/cover;
+            background-size: cover;
+            background-position: center 40%;
             color: #fff;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
         }
+
         .container {
-            background-color: #1f1f1f;
-            padding: 30px;
-            border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-            max-width: 600px;
-            margin-top: 50px;
+            background-color: rgba(31, 31, 31, 0.9); /* Darker semi-transparent background for the card */
+            padding: 30px; /* Reduced padding */
+            border-radius: 12px;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.7); /* Enhanced shadow for depth */
+            max-width: 500px; /* Reduced max-width to make the card smaller */
+            margin: 50px auto;
         }
+
         h1 {
-            text-align: center;
-            margin-bottom: 30px;
+            text-align: center; 
+            color: #ff7417;
+            margin-bottom: 20px; /* Reduced margin for a compact header */
+            font-size: 1.8rem; /* Reduced font size */
+            font-weight: bold; /* Bold for emphasis */
         }
+
         .form-group label {
             font-weight: bold;
+            color: #ffffff; /* Highlight label color */
         }
+
+        /* Enhanced input fields */
         .form-control {
-            background-color: #333;
+            background-color: #444; /* Darker background for inputs */
             border: 1px solid #555;
             color: #fff;
+            transition: border-color 0.3s, box-shadow 0.3s; /* Smooth transition for focus effect */
+            padding: 10px; /* Consistent padding for input fields */
         }
+
+        /* Focus effect for input fields */
         .form-control:focus {
-            background-color: #444;
-            border-color: #ff6600;
+            background-color: #555; /* Slightly lighter on focus */
+            border-color: #ff6600; /* Highlight border color */
             color: #fff;
+            box-shadow: 0 0 10px rgba(255, 102, 0, 0.5); /* Subtle glow effect */
         }
+
+        /* Styling for the textarea (Content box) */
+        .form-control textarea {
+            background-color: #222; /* Black background for the textarea */
+            border: 1px solid #555; /* Consistent border with other inputs */
+            color: #000000;
+            height: 150px; /* Reduced height for a more compact look */
+            resize: none; /* Prevent resizing */
+        }
+
+
+        /* Focus effect for textarea */
+        .form-control textarea:focus {
+            background-color: #333; /* Slightly lighter on focus */
+            border-color: #ff6600; /* Highlight border color */
+            color: #fff;
+            box-shadow: 0 0 10px rgba(255, 102, 0, 0.5); /* Subtle glow effect */
+        }
+
         .btn-primary {
             background-color: #ff6600;
             border-color: #ff6600;
+            font-weight: bold; /* Bold text for buttons */
+            transition: background-color 0.3s, border-color 0.3s; /* Smooth transition */
+            padding: 12px; /* Increase padding for better button aesthetics */
         }
+
         .btn-primary:hover {
             background-color: #e65c00;
             border-color: #e65c00;
         }
+
         .btn-secondary {
             background-color: #555;
             color: #fff;
+            border: none;
+            font-weight: bold; /* Bold text for buttons */
+            transition: background-color 0.3s; /* Smooth transition */
+            padding: 12px; /* Consistent padding for secondary button */
         }
+
         .btn-secondary:hover {
             background-color: #666;
+        }
+
+        .form-container {
+            padding: 15px; /* Reduced padding for a more compact look */
+        }
+
+        .form-container .form-group {
+            margin-bottom: 20px; /* Slightly reduced bottom margin for form fields */
+        }
+
+        .form-container button {
+            width: 100%;
+            padding: 12px; /* Increased padding for the button */
+        }
+
+        .form-container .cancel-btn {
+            margin-top: 15px; /* Increased margin-top for consistency */
         }
     </style>
 </head>
 <body>
     <div class="container">
         <h1>Edit Announcement: {{ announcement.title }}</h1>
-        <form method="post" enctype="multipart/form-data">
-            {% csrf_token %}
-            <div class="form-group">
-                {{ form.as_p }}
-            </div>
-            <button type="submit" class="btn btn-primary btn-block">Save Changes</button>
-        </form>
-        <a href="{% url 'announcements_page' society_id=announcement.society.id %}" class="btn btn-secondary btn-block mt-3">Cancel</a>
+        <div class="form-container">
+            <form method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="form-group">
+                    {{ form.as_p }}
+                </div>
+                <button type="submit" class="btn btn-primary btn-block">Save Changes</button>
+            </form>
+            <a href="{% url 'announcements_page' society_id=announcement.society.id %}" class="btn btn-secondary cancel-btn">Cancel</a>
+        </div>
     </div>
 </body>
 </html>
